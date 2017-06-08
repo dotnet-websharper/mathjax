@@ -4,14 +4,22 @@ open IntelliFactory.Build
 let bt =
     BuildTool().PackageId("WebSharper.MathJax")
         .VersionFrom("WebSharper")
-        .WithFSharpVersion(FSharpVersion.FSharp41)
-        .WithFramework(fun f -> f.Net40)
 
 let main =
     bt.WebSharper.Extension("WebSharper.MathJax")
         .SourcesFromProject()
         .Embed([])
         .References(fun r -> [])
+
+let sample =
+    bt.WebSharper.SiteletWebsite("WebSharper.MathJax.Sample")
+        .SourcesFromProject()
+        .Embed([])
+        .References(fun r ->
+            [
+                r.Project(main)
+                r.NuGet("WebSharper.UI.Next").Latest(true).Reference()
+            ])
 
 let tests =
     bt.WebSharper.SiteletWebsite("WebSharper.MathJax.Tests")

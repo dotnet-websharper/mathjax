@@ -4,8 +4,6 @@ open IntelliFactory.Build
 let bt =
     BuildTool().PackageId("Zafir.MathJax")
         .VersionFrom("Zafir")
-//        .WithFSharpVersion(FSharpVersion.FSharp41)
-//        .WithFramework(fun f -> f.Net45)
 
 let main =
     bt.Zafir.Extension("WebSharper.MathJax")

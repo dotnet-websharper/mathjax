@@ -21,20 +21,21 @@ let sample =
                 r.NuGet("WebSharper.UI.Next").Latest(true).Reference()
             ])
 
-let tests =
-    bt.WebSharper.SiteletWebsite("WebSharper.MathJax.Tests")
-        .SourcesFromProject()
-        .Embed([])
-        .References(fun r ->
-            [
-                r.Project(main)
-                r.NuGet("WebSharper.Testing").Reference()
-                r.NuGet("WebSharper.UI.Next").Reference()
-            ])
+//let tests =
+//    bt.WebSharper.SiteletWebsite("WebSharper.MathJax.Tests")
+//        .SourcesFromProject()
+//        .Embed([])
+//        .References(fun r ->
+//            [
+//                r.Project(main)
+//                r.NuGet("WebSharper.Testing").Reference()
+//                r.NuGet("WebSharper.UI.Next").Reference()
+//            ])
 
 bt.Solution [
     main
-    tests
+//  tests
+    sample
 
     bt.NuGet.CreatePackage()
         .Configure(fun c ->

@@ -21,20 +21,21 @@ let sample =
                 r.NuGet("Zafir.UI.Next").Latest(true).Reference()
             ])
 
-let tests =
-    bt.Zafir.SiteletWebsite("WebSharper.MathJax.Tests")
-        .SourcesFromProject()
-        .Embed([])
-        .References(fun r ->
-            [
-                r.Project(main)
-                r.NuGet("Zafir.Testing").Latest(true).Reference()
-                r.NuGet("Zafir.UI.Next").Latest(true).Reference()
-            ])
+//let tests =
+//    bt.Zafir.SiteletWebsite("WebSharper.MathJax.Tests")
+//        .SourcesFromProject()
+//        .Embed([])
+//        .References(fun r ->
+//            [
+//                r.Project(main)
+//                r.NuGet("Zafir.Testing").Latest(true).Reference()
+//                r.NuGet("Zafir.UI.Next").Latest(true).Reference()
+//            ])
 
 bt.Solution [
     main
-    tests
+//  tests
+    sample
 
     bt.NuGet.CreatePackage()
         .Configure(fun c ->

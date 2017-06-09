@@ -1,1 +1,1 @@
-document.write("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js\" type=\"text/javascript\" charset=\"UTF-8\">\r\n\r\n</script>")
+document.write("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js\" type=\"text/javascript\" charset=\"UTF-8\">\r\n\r\n</script><script src=\"http://code.jquery.com/jquery-3.1.1.min.js\" type=\"text/javascript\" charset=\"UTF-8\">\r\n\r\n</script>")

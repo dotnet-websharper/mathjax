@@ -12,6 +12,9 @@ open WebSharper.MathJax
 [<JavaScript>]
 module Client =
 
+    [<Inline "$o()">]
+    let call (o: obj) = X<unit>
+
 #if ZAFIR
     [<SPAEntryPoint>]
     let Main () =
@@ -34,6 +37,19 @@ module Client =
         mathJaxConfig.DisplayAlign <- "left"
         
         MathJax.Hub.Config(mathJaxConfig)
+
+        let f = 
+            div [
+                text "When $a \\ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$"
+            ]
+        
+       
+
+        JQuery.Of("#btn").On("click", (fun _ _ ->
+            JQuery.Of("#tex").Append(f.Dom).Ignore
+            MathJax.Hub.Queue([| "Typeset", MathJax.Hub :> obj, [| f.Dom :> obj |] |]) |> ignore
+        )).Ignore
+        ()
 #else
     let Main () =
         let mathJaxConfig = new MathJax.Config()

@@ -884,18 +884,28 @@ module Definition =
     let MJC =
         MathJaxClass
             |=> Nested [
-                MathJaxHubClass
-                MathJaxAjaxClass
-                MathJaxMessageClass
-                MathJaxHTMLClass
-                MathJaxCallbackClass
                 MathJaxLocalizationClass
-                MathJaxInputJaxClass
-                MathJaxOutputJaxClass
-                MathJaxElementJaxClass
-                MathJaxObjectClass
             ]
             |+> Static [
+
+                "Hub" =? MathJaxHubClass
+
+                "Ajax" =? MathJaxAjaxClass
+
+                "Message" =? MathJaxMessageClass
+
+                "HTML" =? MathJaxHTMLClass
+
+                "CallBack" =? MathJaxCallbackClass
+
+                "Object" =? MathJaxObjectClass
+
+                "InputJax" =? MathJaxInputJaxClass
+
+                "OutputJax" =? MathJaxOutputJaxClass
+
+                "ElementJax" =? MathJaxElementJaxClass
+
                 "version" =? T<string>
 
                 "fileversion" =? T<string>
@@ -913,6 +923,15 @@ module Definition =
 
             Namespace "WebSharper.MathJax" [
                 MJC
+                MathJaxInputJaxClass
+                MathJaxOutputJaxClass
+                MathJaxElementJaxClass
+                MathJaxObjectClass
+                MathJaxHubClass
+                MathJaxAjaxClass
+                MathJaxMessageClass
+                MathJaxHTMLClass
+                MathJaxCallbackClass
                 Browser
                 MenuSetting
                 ErrorSetting

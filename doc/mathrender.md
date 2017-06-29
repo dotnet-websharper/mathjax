@@ -13,7 +13,7 @@ MathJax, so WebSharper too allows you to use a variety of common math formatting
 | AsciiMath | `"asciimath2jax.js"`| `"input/AsciiMath"` |
 
 
-## Supported output formats:
+## Supported output formats
 
 | Format      | Jax include            |
 |-------------|------------------------| 
@@ -53,7 +53,7 @@ To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Ja
 
 ## An example for expressions
 
-There are many functions in [MathJS](./#docs/extensions/mathjs) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](./#docs/extensions/mathjax) we can render the result. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
+There are many functions in [MathJS](./#docs/extensions/mathjs) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax extension](./#docs/extensions/mathjax) we can render the result if the formula is in `TeX` format. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
 
 (Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](mathjax.org))
 

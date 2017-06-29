@@ -1,6 +1,6 @@
 # Rendering math with WebSharper
 
-Rendering math expressions in WebSharper works with [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](#docs/extensions/mathjax).
+Rendering math expressions in WebSharper works with [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](./#docs/extensions/mathjax).
 
 MathJax, so WebSharper too allows you to use a variety common math formatting systems but not only that, it supports more than one output formatting.
 
@@ -21,7 +21,7 @@ Supported output formats:
 
 ## Rendering expresions
 
-To render static expressions (it's part of the static html file (or generated with WebSharper to the html file at the beginning)) we don't have to do anything else but configuring the MathJax ([see an example here]()).
+To render static expressions (it's part of the static html file (or generated with WebSharper to the html file at the beginning)) we don't have to do anything else but configuring MathJax ([see an example here]()).
 
 In these examples we render dynamicaly changing formulas. In order to do that we have to use and call the `MathJax.Hub.Queue` on every update.
 
@@ -48,8 +48,8 @@ To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Ja
 
 ## An example for expressions
 
-If we have an expression calculated via [MathJS](#docs/extensions/mathjs) we can convert it into a TeX string with the `.ToTex()` method.
+There are many functions in [MathJS](#docs/extensions/mathjs) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax](mathjax.org) extension we can render the result. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
 
-In the following example we use `Math.Derivative()` to get a `Node` from the expression which can be converted to TeX with its `.ToTex()` method.
+(Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](mathjax.org))
 
 <div style="width:100%;min-height:400px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="http://test2.try.websharper.com/embed/setr/0000Cy"></iframe><div>

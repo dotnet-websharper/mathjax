@@ -13,7 +13,7 @@ MathJax, so WebSharper too allows you to use a variety of common math formatting
 | AsciiMath | `"asciimath2jax.js"`| `"input/AsciiMath"` |
 
 
-Supported output formats:
+## Supported output formats:
 
 | Format      | Jax include            |
 |-------------|------------------------| 

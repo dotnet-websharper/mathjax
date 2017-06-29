@@ -10,7 +10,7 @@ To configure it we need the `MathJax.Config()` object. The options are the same 
 
 A basic example:
 
-```JavaScript
+```js
 MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
     jax: ["input/TeX", "output/HTML-CSS"],

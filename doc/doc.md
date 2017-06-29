@@ -32,7 +32,35 @@ MathJax.Hub.Config(
 )
 ```
 
-Every config option from MathJax got its unique config type in WebSharper. They all have the same fields with the same usage.
+### Other config types
+
+Every config option from MathJax got its unique config type in WebSharper. They all have the same fields with the same usage. So when we'd write in JavaScript:
+
+```js
+menuSettings: {
+    zoom: "None",
+    CTRL: false,
+    ...
+    errorSettings: {
+        message: ["[Math Processing Error]"]
+    }
+    ...
+}
+```
+
+We have to write this is F#:
+
+```fsharp
+menuSettings = MathJax.MenuSetting(
+    Zoom = "None",
+    CTRL = false,
+    ...
+    ErrorSettings = MathJax.ErrorSetting(
+        Message = [| "[Math Processing Error]" |]
+    )
+    ...
+)
+```
 
 ## Using MathJax
 

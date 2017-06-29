@@ -5,17 +5,19 @@ Rendering math expressions in WebSharper works with [MathJax](https://www.mathja
 MathJax, so WebSharper too allows you to use a variety common math formatting systems but not only that, it supports more than one output formatting.
 
 Supported input formats:
-- TeX
-- MathML
-- AsciiMath
+
+* TeX
+* MathML
+* AsciiMath
 
 Supported output formats:
-- CommonHtml
-- HTML-CSS
-- NativeMML
-- SVG
-- PreviewHTML
-- PlainSource
+
+* CommonHtml
+* HTML-CSS
+* NativeMML
+* SVG
+* PreviewHTML
+* PlainSource
 
 ## Rendering expresions
 

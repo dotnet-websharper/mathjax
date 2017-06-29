@@ -4,24 +4,24 @@ Rendering math expressions in WebSharper works with [MathJax](https://www.mathja
 
 MathJax, so WebSharper too allows you to use a variety common math formatting systems but not only that, it supports more than one output formatting.
 
-Supported input formats:
+Supported input formats (extension, jax):
 
-* TeX
-* MathML
-* AsciiMath
+* TeX       - `"tex2jax.js"`, `"input/TeX"`
+* MathML    - `"mml2jax.js"`, `"input/MathML"`
+* AsciiMath - `"asciimath2jax.js"`, `"input/AsciiMath"`
 
-Supported output formats:
+Supported output formats (jax):
 
-* CommonHtml
-* HTML-CSS
-* NativeMML
-* SVG
-* PreviewHTML
-* PlainSource
+* CommonHtml  - `"output/CommonHTML"`
+* HTML-CSS    - `"output/HTML-CSS"`
+* NativeMML   - `"output/NativeMML"`
+* SVG         - `"output/SVG"`
+* PreviewHTML - `"output/PreviewHTML"`
+* PlainSource - `"output/PlainSource"`
 
 ## Rendering expresions
 
-To render static expressions (it's part of the static html file (or generated with WebSharper to the html file at the beginning)) we don't have to do anything else but configuring MathJax ([see an example here]()).
+To render static expressions (it's part of the static html file (or generated with WebSharper to the html file at the beginning)) we don't have to do anything else but configuring MathJax ([see an example here](./#docs/extensions/mathjax)).
 
 In these examples we render dynamicaly changing formulas. In order to do that we have to use and call the `MathJax.Hub.Queue` on every update.
 
@@ -48,7 +48,7 @@ To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Ja
 
 ## An example for expressions
 
-There are many functions in [MathJS](#docs/extensions/mathjs) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax](mathjax.org) extension we can render the result. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
+There are many functions in [MathJS](./#docs/extensions/mathjs) that calculates an expression, solves a problem. In this example we'll use the `Math.Derivative` function to get a `Node` with the result in it. A `Node` then can be converted to a `String`, but with the [MathJax](./#docs/extensions/mathjax) extension we can render the result. To do that we have to set up `MathJax` to parse and render `TeX` formulas then by using the `Node`'s `ToTex()` function we convert the result into a `String` with the formula in `TeX` formatting.
 
 (Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](mathjax.org))
 

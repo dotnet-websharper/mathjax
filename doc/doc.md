@@ -99,7 +99,7 @@ Most of the time we'll want to render an expression we've calculated while runni
 
 For example we store the expression string in a View, then we'll have to add an `on.viewUpdate` attribute to the container element with the `MathJax.Hub.Queue` method.
 
-This can be called on every individual DOM element, or can be called on the whole page. To call on the whole page, we just have to call:
+This can be called on every individual DOM element, or can be called on the whole page. To update the whole page, all we have to do is this function:
 
 ```fsharp
 MathJax.Hub.Queue([| "Typeset"; MathJax.Hub :> obj |])

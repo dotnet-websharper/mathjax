@@ -41,7 +41,7 @@ MathJax.Hub.Config(
 | AsciiMath | `"asciimath2jax.js"`| `"input/AsciiMath"` |
 
 
-Supported output formats:
+## Supported output formats
 
 | Format      | Jax include            |
 |-------------|------------------------| 

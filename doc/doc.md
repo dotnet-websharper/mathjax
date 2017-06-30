@@ -10,7 +10,7 @@ To configure it we need the `MathJax.Config()` object. The options are the same 
 
 A basic example:
 
-```js
+```javascript
 MathJax.Hub.Config({
     extensions: ["tex2jax.js"],
     jax: ["input/TeX", "output/HTML-CSS"],
@@ -78,7 +78,7 @@ menuSettings: {
 We have to write this is F#:
 
 ```fsharp
-menuSettings = MathJax.MenuSetting(
+let menuSettings = MathJax.MenuSetting(
     Zoom = "None",
     CTRL = false,
     ...

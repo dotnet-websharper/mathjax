@@ -1,8 +1,8 @@
 # Rendering math with WebSharper
 
-Rendering math expressions in WebSharper works with [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](./#docs/extensions/mathjax).
+Rendering math expressions in WebSharper works with the [MathJax](https://www.mathjax.org/) JavaScript library. The documentation for MathJax extension can be found [here](./#docs/extensions/mathjax).
 
-MathJax, so WebSharper too allows you to use a variety of common math formatting systems but not only that, it supports more than one output formatting too.
+MathJax, so WebSharper too allows you to use a variety of common math formatting systems but not only that, it supports more than one output formatting systems.
 
 ## Supported input formats
 

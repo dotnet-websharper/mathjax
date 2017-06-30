@@ -63,7 +63,7 @@ with these basic options we're ready to render TeX strings on the screen. We sim
 
 Every config option from `MathJax` got its unique config type in WebSharper. They all have the same fields with the same usage. So when we'd write in `JavaScript`:
 
-```js
+```javascript
 menuSettings: {
     zoom: "None",
     CTRL: false,

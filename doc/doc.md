@@ -32,6 +32,13 @@ MathJax.Hub.Config(
 )
 ```
 
+with these basic options we're ready to render TeX strings on the screen. We simply have to have the formula in the `html` file, for example:
+
+```html
+<p>This is inline math: $a \ne 0$ or \(a \ne 0\)</p>
+<p>This is display math: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$</p>
+```
+
 ## Supported input formats
 
 | Format    | Extension           | Jax include         |
@@ -51,13 +58,6 @@ MathJax.Hub.Config(
 | SVG         | `"output/SVG"`         |
 | PreviewHTML | `"output/PreviewHTML"` |
 | PlainSource | `"output/PlainSource"` |
-
-with these basic options we're ready to render TeX strings on the screen. We simply have to have the formula in the `html` file, for example:
-
-```html
-<p>This is inline math: $a \ne 0$ or \(a \ne 0\)</p>
-<p>This is display math: $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$</p>
-```
 
 ### Other config types
 

@@ -107,4 +107,4 @@ MathJax.Hub.Queue([| "Typeset"; MathJax.Hub :> obj |])
 
 To call on a specific DOM element, see the example below:
 
-<div style="width:100%;min-height:300px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="http://test2.try.websharper.com/embed/setr/0000DN"></iframe><div>
+<div style="width:100%;min-height:300px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000Dw"></iframe><div>

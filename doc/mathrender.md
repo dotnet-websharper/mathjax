@@ -35,21 +35,21 @@ In these examples we render dynamicaly changing formulas. In order to do that we
 To render TeX expressions we have to include `"input/TeX"` in the Jax config, and `"tex2jax.js"` in the extensions.
 ([TeX documentation](https://en.wikibooks.org/wiki/TeX/def))
 
-<div style="width:100%;min-height:300px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000Dw"></iframe><div>
+<div style="width:100%;min-height:300px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000Dw"></iframe></div>
 
 ### MathML
 
 To render MathML expressions we have to include `"input/MathML"` in the Jax config, and `"mml2jax.js"` in the extensions.
 ([MathML documentation](https://www.w3.org/TR/MathML/))
 
-<div style="width:100%;min-height:450px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000Dv"></iframe><div>
+<div style="width:100%;min-height:450px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000Dv"></iframe></div>
 
 ### Ascii Math
 
 To render AsciiMath expressions we have to include `"input/AsciiMath"` in the Jax config, and `"asciimath2jax.js"` in the extensions.
 ([AsciiMath documentation](http://asciimath.org/))
 
-<div style="width:100%;min-height:300px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000Du"></iframe><div>
+<div style="width:100%;min-height:300px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000Du"></iframe></div>
 
 ## An example for expressions
 
@@ -57,4 +57,4 @@ There are many functions in [MathJS](https://github.com/intellifactory/websharpe
 
 (Most of the functions don't result a `Node`, but they can be converted to `Node` by `Math.Parse()` or by other means. ([MathJax documentation](https://www.mathjax.org))
 
-<div style="width:100%;min-height:400px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000E2"></iframe><div>
+<div style="width:100%;min-height:400px;position:relative"><iframe style="position:absolute;border:none;width:100%;height:100%" src="https://try.websharper.com/embed/setr/0000E2"></iframe></div>

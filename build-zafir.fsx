@@ -2,34 +2,34 @@
 open IntelliFactory.Build
 
 let bt =
-    BuildTool().PackageId("Zafir.MathJax")
-        .VersionFrom("Zafir")
+    BuildTool().PackageId("WebSharper.MathJax")
+        .VersionFrom("WebSharper")
 
 let main =
-    bt.Zafir.Extension("WebSharper.MathJax")
+    bt.WebSharper4.Extension("WebSharper.MathJax")
         .SourcesFromProject()
         .Embed([])
         .References(fun r -> [])
 
 let sample =
-    bt.Zafir.SiteletWebsite("WebSharper.MathJax.Sample")
+    bt.WebSharper4.SiteletWebsite("WebSharper.MathJax.Sample")
         .SourcesFromProject()
         .Embed([])
         .References(fun r ->
             [
                 r.Project(main)
-                r.NuGet("Zafir.UI.Next").Latest(true).Reference()
+                r.NuGet("WebSharper.UI.Next").Latest(true).Reference()
             ])
 
 //let tests =
-//    bt.Zafir.SiteletWebsite("WebSharper.MathJax.Tests")
+//    bt.WebSharper4.SiteletWebsite("WebSharper.MathJax.Tests")
 //        .SourcesFromProject()
 //        .Embed([])
 //        .References(fun r ->
 //            [
 //                r.Project(main)
-//                r.NuGet("Zafir.Testing").Latest(true).Reference()
-//                r.NuGet("Zafir.UI.Next").Latest(true).Reference()
+//                r.NuGet("WebSharper.Testing").Latest(true).Reference()
+//                r.NuGet("WebSharper.UI.Next").Latest(true).Reference()
 //            ])
 
 bt.Solution [

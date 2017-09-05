@@ -3,7 +3,7 @@ open IntelliFactory.Build
 
 let bt =
     BuildTool().PackageId("WebSharper.MathJax")
-        .VersionFrom("WebSharper")
+        .VersionFrom("WebSharper", versionSpec = "(,4.0)")
 
 let main =
     bt.WebSharper.Extension("WebSharper.MathJax")
@@ -18,7 +18,7 @@ let sample =
         .References(fun r ->
             [
                 r.Project(main)
-                r.NuGet("WebSharper.UI.Next").Latest(true).Reference()
+                r.NuGet("WebSharper.UI.Next").Version("(,4.0)").Reference()
             ])
 
 //let tests =
@@ -28,8 +28,8 @@ let sample =
 //        .References(fun r ->
 //            [
 //                r.Project(main)
-//                r.NuGet("WebSharper.Testing").Reference()
-//                r.NuGet("WebSharper.UI.Next").Reference()
+//                r.NuGet("WebSharper.Testing").Version("(,4.0)").Reference()
+//                r.NuGet("WebSharper.UI.Next").Version("(,4.0)").Reference()
 //            ])
 
 bt.Solution [

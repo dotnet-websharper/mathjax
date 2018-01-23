@@ -1,7 +1,6 @@
 /.vs/
 /*.suo
-/*.Tests/Scripts/WebSharper/
-/*.Tests/Content/WebSharper/
+/*.Sample/Content/
 /build/
 /*/bin/
 /*/obj/
@@ -13,3 +12,4 @@ obj/
 /.fake/
 /paket-files/
 /.vscode/
+nuget/*.paket.template

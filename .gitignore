@@ -1,6 +1,7 @@
 /.vs/
 /*.suo
 /*.Sample/Content/
+/*.Sample/Scripts/
 /build/
 /*/bin/
 /*/obj/

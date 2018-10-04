@@ -1,3 +1,22 @@
+// $begin{copyright}
+//
+// This file is part of WebSharper
+//
+// Copyright (c) 2008-2018 IntelliFactory
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you
+// may not use this file except in compliance with the License.  You may
+// obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+// implied.  See the License for the specific language governing
+// permissions and limitations under the License.
+//
+// $end{copyright}
 namespace WebSharper.MathJax.Extension
 
 open WebSharper
@@ -414,7 +433,7 @@ module Definition =
             |> WithComment "Sets the configuration options (stored in MathJax.Hub.config)."
 
             "Configured" => T<unit> ^-> T<unit>
-            |> WithComment "MathJax’s startup sequence is delayed until this routine is called."
+            |> WithComment "MathJaxï¿½s startup sequence is delayed until this routine is called."
 
             "Register.PreProcessor" => Callback ^-> T<unit>
             |> WithComment "Used by preprocessors to register themselves with MathJax so that they will be called during the MathJax.Hub.PreProcess() action."
@@ -507,7 +526,7 @@ module Definition =
     MathJaxAjaxClass
         |+> Static [
             "Require" => T<string> * !? Callback ^-> Callback
-            |> WithComment "Loads the given file if it hasn’t been already. The file must be a JavaScript file or a CSS stylesheet."
+            |> WithComment "Loads the given file if it hasnï¿½t been already. The file must be a JavaScript file or a CSS stylesheet."
 
             "Load" => T<string> * !? Callback ^-> Callback
             |> WithComment "Used internally to load a given file without checking if it already has been loaded, or where it is to be found."
@@ -516,7 +535,7 @@ module Definition =
             |> WithComment "Called from within the loaded files to inform MathJax that the file has been completely loaded and initialized."
 
             "loadTimeout" => T<string> ^-> T<unit>
-            |> WithComment "Called when the timeout period is over and the file hasn’t loaded. This indicates an error condition, and the MathJax.Ajax.loadError() method will be executed, then the file’s callback will be run with MathJax.Ajax.STATUS.ERROR as its parameter."
+            |> WithComment "Called when the timeout period is over and the file hasnï¿½t loaded. This indicates an error condition, and the MathJax.Ajax.loadError() method will be executed, then the fileï¿½s callback will be run with MathJax.Ajax.STATUS.ERROR as its parameter."
 
             "loadError" => T<string> ^-> T<unit>
             |> WithComment "The default error handler called when a file fails to load. It puts a warning message into the MathJax message box on screen."
@@ -563,7 +582,7 @@ module Definition =
             |> WithComment "This removes the message frame from the window (it will reappear when future messages are set, however)."
 
             "File" => T<string> ^-> T<int>
-            |> WithComment "This sets the message area to a “Loading file” message, where file is the name of the file (with [MathJax] representing the root directory)."
+            |> WithComment "This sets the message area to a ï¿½Loading fileï¿½ message, where file is the name of the file (with [MathJax] representing the root directory)."
 
             "filterText" => T<string> * T<int> ^-> T<string>
             |> WithComment "This method is called on each message before it is displayed. It can be used to modify (e.g., shorten) the various messages before they are displayed."
@@ -618,7 +637,7 @@ module Definition =
             |> WithComment "Increments the running property, indicating that any commands that are added to the queue should not be executed immediately, but should be queued for later execution (when its Resume() is called)."
 
             "Resume" => T<unit> ^-> T<unit>
-            |> WithComment "Decrements the running property, if it is positive. When it is zero, commands can be processed, but that is not done automatically — you would need to call Process() to make that happen."
+            |> WithComment "Decrements the running property, if it is positive. When it is zero, commands can be processed, but that is not done automatically ï¿½ you would need to call Process() to make that happen."
 
             "wait" => Callback ^-> Callback
             |> WithComment "Used internally when an entry in the queue is a Callback object rather than a callback specification."
@@ -678,7 +697,7 @@ module Definition =
             |> WithComment "Creates a MathJax.CallBack.Queue object and pushes the given callbacks into the queue."
 
             "Signal" => T<string> ^-> MathJaxCallbackQueueClass
-            |> WithComment "Looks for a named signal, creates it if it doesn’t already exist, and returns the signal object."
+            |> WithComment "Looks for a named signal, creates it if it doesnï¿½t already exist, and returns the signal object."
 
             "ExecuteHooks" => Type.ArrayOf T<obj> * !? (Type.ArrayOf T<obj>) * !? (Type.ArrayOf T<bool>) ^-> Type.ArrayOf Callback
             |> WithComment "Calls each callback in the hooks array (or the single hook if it is not an array), passing it the arguments stored in the data array."
@@ -688,7 +707,7 @@ module Definition =
         ]
         |+> Instance [
             "reset" => T<unit> ^-> T<unit>
-            |> WithComment "Clears the callback’s called property."
+            |> WithComment "Clears the callbackï¿½s called property."
 
             "hook" =? T<obj>
 
@@ -799,7 +818,7 @@ module Definition =
             |> WithComment "This registers the MIME-type associated with this input jax so that MathJax knows to call this input jax when it sees a <script> of that type."
 
             "needsUpdate" => MathJaxElementJaxClass ^-> T<bool>
-            |> WithComment "This implements the element jax’s needsUpdate() method, and returns true if the jax needs to be rerendered (i.e., the text has changed), and false otherwise."
+            |> WithComment "This implements the element jaxï¿½s needsUpdate() method, and returns true if the jax needs to be rerendered (i.e., the text has changed), and false otherwise."
                 
             //properties
             "id" =? T<string>
@@ -818,7 +837,7 @@ module Definition =
             |> WithComment "This is called by MathJax.Hub to ask the output processor to prepare to process math scripts."
 
             "preTranslate" => T<obj> ^-> T<unit>
-            |> WithComment "This routine replaces preProcess() above when the jax’s jax.js file is loaded."
+            |> WithComment "This routine replaces preProcess() above when the jaxï¿½s jax.js file is loaded."
 
             "Translate" => T<JavaScript.Dom.Node> * T<obj> ^-> MathJaxElementJaxClass
             |> WithComment "This is the main routine called by MathJax when an element jax is to be converted to output."

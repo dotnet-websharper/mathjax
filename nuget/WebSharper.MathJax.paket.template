@@ -16,4 +16,4 @@ files
     ../WebSharper.MathJax/bin/Release/netstandard2.0/WebSharper.MathJax.dll ==> lib/netstandard2.0
     ../WebSharper.MathJax/bin/Release/netstandard2.0/WebSharper.MathJax.xml ==> lib/netstandard2.0
 dependencies
-        WebSharper ~> 4.6.1
+        WebSharper ~> 4.6.2

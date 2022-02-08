@@ -9,7 +9,7 @@
 #r "nuget: Paket.Core"
 #else
 #r "paket:
-nuget FAKE.Core
+nuget FAKE.Core 5.0.0
 nuget Fake.Core.Target
 nuget Fake.IO.FileSystem
 nuget Fake.Tools.Git

@@ -31,4 +31,4 @@ let targets =
     WSTargets.Default (fun () -> GetSemVerOf "WebSharper" |> ComputeVersion)
     |> MakeTargets
 
-Target.runOrDefault "Build"
+Target.runOrDefaultWithArguments "Build"

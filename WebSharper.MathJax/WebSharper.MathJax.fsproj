@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <WebSharperProject>Extension</WebSharperProject>
@@ -6,8 +6,14 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Main.fs" />
+	  <Compile Include="MathJaxV3.fs" />
+    <Compile Include="Main.fs" />    
   </ItemGroup>
+  <PropertyGroup>
+    <NpmDependencies>
+      <NpmPackage Name="mathjax" Version="gt= 3.0.0 lt 3.3.0" ResolutionStrategy="Max" />
+    </NpmDependencies>
+  </PropertyGroup>
   <Import Project="..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets" Condition="Exists('..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets')" />
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

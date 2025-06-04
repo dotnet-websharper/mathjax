@@ -2,6 +2,9 @@
 /*.suo
 /*.Sample/Content/
 /*.Sample/Scripts/
+/*.Sample/wwwroot/Scripts/
+/*.Sample/.vs
+/*.Sample/node_modules
 /build/
 /*/bin/
 /*/obj/

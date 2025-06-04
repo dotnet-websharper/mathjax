@@ -983,7 +983,7 @@ module Definition =
 [<Sealed>]
 type Extension() =
     interface IExtension with
-        member x.Assembly = Definition.Assembly
+        member x.Assembly = MathJaxV3.Assembly
 
 [<assembly: Extension(typeof<Extension>)>]
 do ()

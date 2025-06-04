@@ -1,68 +1,125 @@
-// $begin{copyright}
-//
-// This file is part of WebSharper
-//
-// Copyright (c) 2008-2018 IntelliFactory
-//
-// Licensed under the Apache License, Version 2.0 (the "License"); you
-// may not use this file except in compliance with the License.  You may
-// obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-// implied.  See the License for the specific language governing
-// permissions and limitations under the License.
-//
-// $end{copyright}
 namespace WebSharper.MathJax.Sample
 
 open WebSharper
 open WebSharper.JavaScript
-open WebSharper.JQuery
 open WebSharper.UI
 open WebSharper.UI.Client
-open WebSharper.UI.Html
 open WebSharper.UI.Templating
 open WebSharper.MathJax
 
 [<JavaScript>]
 module Client =
 
-    [<Inline "$o()">]
-    let call (o: obj) = X<unit>
+    type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
+
+    let mathjaxConfig() =
+        MathJax.Config <- MathJaxConfig(
+            Loader = LoaderConfig(
+                Load = [| "input/tex"; "input/asciimath"; "input/mml"; "output/chtml" |]
+            ),
+            Tex = TexConfig(
+                InlineMath = [| ("$", "$"); ("\\(", "\\)") |]
+            ),
+            Asciimath = AsciiMathConfig(
+                Delimiters = [| ("`", "`") |]
+            )
+        )
+
+    let renderTex2CHTML(id: string) =
+        let html = MathJax.Tex2chtml("\\int_0^1 x^2 dx") |> As<Dom.Node>
+        JS.Document.GetElementById(id).AppendChild(html) |> ignore
+
+    let renderTex2MML(id: string) =
+        let mml = MathJax.Tex2mml("\\int_0^1 x^2 dx") |> As<string>
+        JS.Document.GetElementById(id).TextContent <- mml
+
+    let renderAscii2CHTML(id: string) =
+        let html = MathJax.Asciimath2chtml("x = (-b +- sqrt(b^2 - 4ac)) / (2a)") |> As<Dom.Node>
+        JS.Document.GetElementById(id).AppendChild(html) |> ignore
+
+    let renderAscii2MML(id: string) =
+        let mml = MathJax.Asciimath2mml("x = (-b +- sqrt(b^2 - 4ac)) / (2a)") |> As<string>
+        JS.Document.GetElementById(id).TextContent <- mml
+
+    let renderMathML2CHTML(id: string) =
+        let mathML = """
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <msubsup>
+                <mo>∫</mo>
+                <mn>0</mn>
+                <mn>1</mn>
+            </msubsup>
+            <msup><mi>x</mi><mn>2</mn></msup><mi>d</mi><mi>x</mi>
+        </math>
+        """
+        let html = MathJax.Mathml2chtml(mathML) |> As<Dom.Node>
+        JS.Document.GetElementById(id).AppendChild(html) |> ignore
+
+    let renderMathML2MML(id: string) =
+        let mathML = """
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <msubsup>
+                <mo>∫</mo>
+                <mn>0</mn>
+                <mn>1</mn>
+            </msubsup>
+            <msup><mi>x</mi><mn>2</mn></msup><mi>d</mi><mi>x</mi>
+        </math>
+        """
+        let mml = MathJax.Mathml2mml(mathML) |> As<string>
+        JS.Document.GetElementById(id).TextContent <- mml
 
     [<SPAEntryPoint>]
     let Main () =
-        let mathJaxConfig = new MathJax.Config()
-        mathJaxConfig.Extensions <- [| "tex2jax.js"; "mml2jax.js"; "asciimath2jax.js" |]
-        mathJaxConfig.Jax <- [| "input/TeX"; "output/CommonHTML"; "input/MathML"; "input/AsciiMath" |]
-        
-        mathJaxConfig.Tex2jax <- Tex2jax()
-        mathJaxConfig.Tex2jax.InlineMath <- [| ("$", "$"); ("\\(", "\\)") |]
-        
-        mathJaxConfig.Mml2jax <- Mml2jax()
-        mathJaxConfig.Mml2jax.Preview <- [| "mathml" |]
+        IndexTemplate
+            .Main()
+            .PageInit(fun () ->
+                // async {
+                //     mathjaxConfig()
+                //     MathJax.Startup.Promise.Then(fun _ ->
+                //         MathJax.Typeset()
 
-        mathJaxConfig.Asciimath2jax <- Asciimath2jax()
-        mathJaxConfig.Asciimath2jax.Delimiters <- [| ("`", "`") |]
-        mathJaxConfig.Asciimath2jax.Preview <- [| "AsciiMath" |]
+                //         MathJax.TypesetPromise().Then(fun _ ->
+                //             Console.Log("✅ typesetPromise finished")
+                //         ) |> ignore
 
-        mathJaxConfig.MenuSettings <- MenuSetting()
-        mathJaxConfig.MenuSettings.Zoom <- "Click"
-        mathJaxConfig.DisplayAlign <- "left"
-        
-        MathJax.Hub.Config(mathJaxConfig)
+                //         MathJax.GetMetricsFor(JS.Document.GetElementById("container"), true) |> ignore
 
-        let f = 
-            Elt.div [] [
-                text "When $a \\ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$"
-            ]
+                //         renderTex2CHTML("resultTex2CHTML")
+                //         renderTex2MML("resultTex2MML")
+                //         renderAscii2CHTML("resultAscii2CHTML")
+                //         renderAscii2MML("resultAscii2MML")
+                //         renderMathML2CHTML("resultMathML2CHTML")
+                //         renderMathML2MML("resultMathML2MML")
+                //     ) |> ignore
+                // }
+                // |> Async.StartImmediate
+                mathjaxConfig()
+                // Test: typeset()
+                MathJax.Typeset()
 
-        JQuery.Of("#btn").On("click", (fun _ _ ->
-            JQuery.Of("#tex").Append(f.Dom).Ignore
-            MathJax.Hub.Queue([| "Typeset", MathJax.Hub :> obj, [| f.Dom :> obj |] |]) |> ignore
-        )).Ignore
-        ()
+                // Test: typesetPromise()
+                MathJax.TypesetPromise().Then(fun _ ->
+                    Console.Log("✅ typesetPromise finished")
+                ) |> ignore
+
+                // Test: tex2chtml
+                renderTex2CHTML("resultTex2CHTML")
+
+                // Test: tex2mml
+                renderTex2MML("resultTex2MML")
+
+                // Test: ascii2chtml
+                renderAscii2CHTML("resultAscii2CHTML")
+
+                // Test: ascii2mml
+                renderAscii2MML("resultAscii2MML")
+
+                // Test: mathml2chtml
+                renderMathML2CHTML("resultMathML2CHTML")
+
+                // Test: mathml2mml
+                renderMathML2MML("resultMathML2MML")
+            )
+            .Doc()
+        |> Doc.RunById "main"

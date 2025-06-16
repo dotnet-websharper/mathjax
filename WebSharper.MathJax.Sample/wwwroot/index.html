@@ -7,14 +7,27 @@
     <link rel="stylesheet" type="text/css" href="Scripts/WebSharper.MathJax.Sample.css" />
     <style>
         /* Don't show the not-yet-loaded templates */
-        [ws-template], [ws-children-template] { display: none; }
+        [ws-template], [ws-children-template] {
+            display: none;
+        }
+
         .math-output {
             margin-top: 1rem;
             padding: 0.5rem;
             border: 1px solid #ccc;
         }
     </style>
-    <script type="text/javascript" src="Scripts/WebSharper.MathJax.Sample.head.js"></script>    
+    <script>
+        MathJax = {
+            loader: {
+                load: ['input/tex', 'input/asciimath', 'input/mml', 'output/chtml']
+            },
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script type="text/javascript" src="Scripts/WebSharper.MathJax.Sample.head.js"></script>
 </head>
 <body>
     <div id="main" ws-children-template="Main">
@@ -23,13 +36,15 @@
             <div id="container" class="math-output">
                 $$x = {-b \pm \sqrt{b^2 - 4ac} \over 2a}$$
                 <br>
-                `x = (-b +- sqrt(b^2 - 4ac)) / (2a)`
+                $ax^2 + bx + c = 0$
+                <br>
+                \(\int_0^1 x^2 dx\)
             </div>
 
             <div class="math-output" id="resultTex2CHTML"></div>
             <div class="math-output" id="resultTex2MML"></div>
-            <div class="math-output" id="resultAscii2CHTML"></div>
-            <div class="math-output" id="resultAscii2MML"></div>
+            <div class="math-output" id="resultMathML2CHTML"></div>
+            <div class="math-output" id="resultMathML2MML"></div>
         </div>
     </div>
     <script type="module" src="Scripts/WebSharper.MathJax.Sample.min.js"></script>

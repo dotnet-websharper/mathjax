@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WebSharper.MathJax.Sample": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:53304;http://localhost:53305"
+    }
+  }
+}

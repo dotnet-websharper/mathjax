@@ -21,10 +21,13 @@
   </ItemGroup>
 
   <ItemGroup>
-  <Reference Include="WebSharper.MathJax">
-    <HintPath>../WebSharper.MathJax/bin/Debug/netstandard2.0/WebSharper.MathJax.dll</HintPath>
-  </Reference>
-</ItemGroup>
+    <Reference Include="WebSharper.MathJax">
+      <HintPath>..\WebSharper.MathJax\bin\Debug\netstandard2.0\WebSharper.MathJax.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.MathJax.ConfigResource">
+      <HintPath>..\WebSharper.MathJax.ConfigResource\bin\Debug\netstandard2.0\WebSharper.MathJax.ConfigResource.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
   <Target Name="ESBuildBundle" AfterTargets="WebSharperCompile" Condition=" '$(Configuration)' == 'Release' ">
     <Exec Command="npm install" />

@@ -12,44 +12,18 @@ module Client =
 
     type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
 
-    let mathjaxConfig() =
-        MathJax.Config <- MathJaxConfig(
-            Loader = LoaderConfig(
-                Load = [| "input/tex"; "input/asciimath"; "input/mml"; "output/chtml" |]
-            ),
-            Tex = TexConfig(
-                InlineMath = [| ("$", "$"); ("\\(", "\\)") |]
-            ),
-            Asciimath = AsciiMathConfig(
-                Delimiters = [| ("`", "`") |]
-            )
-        )
-
     let renderTex2CHTML(id: string) =
-        let html = MathJax.Tex2chtml("\\int_0^1 x^2 dx") |> As<Dom.Node>
+        let html = MathJax.Tex2chtml("$$x = {-b \\pm \\sqrt{b^2 - 4ac} \\over 2a}$$") |> As<Dom.Node>
         JS.Document.GetElementById(id).AppendChild(html) |> ignore
 
     let renderTex2MML(id: string) =
-        let mml = MathJax.Tex2mml("\\int_0^1 x^2 dx") |> As<string>
-        JS.Document.GetElementById(id).TextContent <- mml
-
-    let renderAscii2CHTML(id: string) =
-        let html = MathJax.Asciimath2chtml("x = (-b +- sqrt(b^2 - 4ac)) / (2a)") |> As<Dom.Node>
-        JS.Document.GetElementById(id).AppendChild(html) |> ignore
-
-    let renderAscii2MML(id: string) =
-        let mml = MathJax.Asciimath2mml("x = (-b +- sqrt(b^2 - 4ac)) / (2a)") |> As<string>
+        let mml = MathJax.Tex2mml("$$x = {-b \\pm \\sqrt{b^2 - 4ac} \\over 2a}$$") |> As<string>
         JS.Document.GetElementById(id).TextContent <- mml
 
     let renderMathML2CHTML(id: string) =
         let mathML = """
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <msubsup>
-                <mo>∫</mo>
-                <mn>0</mn>
-                <mn>1</mn>
-            </msubsup>
-            <msup><mi>x</mi><mn>2</mn></msup><mi>d</mi><mi>x</mi>
+            <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mi>x</mi> <mo>=</mo> <mrow data-mjx-texclass="ORD"> <mfrac> <mrow> <mo>&#x2212;</mo> <mi>b</mi> <mo>&#xB1;</mo> <msqrt> <msup> <mi>b</mi> <mn>2</mn> </msup> <mo>&#x2212;</mo> <mn>4</mn> <mi>a</mi> <mi>c</mi> </msqrt> </mrow> <mrow> <mn>2</mn> <mi>a</mi> </mrow> </mfrac> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow>
         </math>
         """
         let html = MathJax.Mathml2chtml(mathML) |> As<Dom.Node>
@@ -58,12 +32,7 @@ module Client =
     let renderMathML2MML(id: string) =
         let mathML = """
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <msubsup>
-                <mo>∫</mo>
-                <mn>0</mn>
-                <mn>1</mn>
-            </msubsup>
-            <msup><mi>x</mi><mn>2</mn></msup><mi>d</mi><mi>x</mi>
+            <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mi>x</mi> <mo>=</mo> <mrow data-mjx-texclass="ORD"> <mfrac> <mrow> <mo>&#x2212;</mo> <mi>b</mi> <mo>&#xB1;</mo> <msqrt> <msup> <mi>b</mi> <mn>2</mn> </msup> <mo>&#x2212;</mo> <mn>4</mn> <mi>a</mi> <mi>c</mi> </msqrt> </mrow> <mrow> <mn>2</mn> <mi>a</mi> </mrow> </mfrac> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow>
         </math>
         """
         let mml = MathJax.Mathml2mml(mathML) |> As<string>
@@ -74,27 +43,6 @@ module Client =
         IndexTemplate
             .Main()
             .PageInit(fun () ->
-                // async {
-                //     mathjaxConfig()
-                //     MathJax.Startup.Promise.Then(fun _ ->
-                //         MathJax.Typeset()
-
-                //         MathJax.TypesetPromise().Then(fun _ ->
-                //             Console.Log("✅ typesetPromise finished")
-                //         ) |> ignore
-
-                //         MathJax.GetMetricsFor(JS.Document.GetElementById("container"), true) |> ignore
-
-                //         renderTex2CHTML("resultTex2CHTML")
-                //         renderTex2MML("resultTex2MML")
-                //         renderAscii2CHTML("resultAscii2CHTML")
-                //         renderAscii2MML("resultAscii2MML")
-                //         renderMathML2CHTML("resultMathML2CHTML")
-                //         renderMathML2MML("resultMathML2MML")
-                //     ) |> ignore
-                // }
-                // |> Async.StartImmediate
-                mathjaxConfig()
                 // Test: typeset()
                 MathJax.Typeset()
 
@@ -109,13 +57,7 @@ module Client =
                 // Test: tex2mml
                 renderTex2MML("resultTex2MML")
 
-                // Test: ascii2chtml
-                renderAscii2CHTML("resultAscii2CHTML")
-
-                // Test: ascii2mml
-                renderAscii2MML("resultAscii2MML")
-
-                // Test: mathml2chtml
+                //Test: mathml2chtml
                 renderMathML2CHTML("resultMathML2CHTML")
 
                 // Test: mathml2mml

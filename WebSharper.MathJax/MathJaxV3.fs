@@ -38,9 +38,7 @@ module MathJaxV3 =
     let InputJaxClass = Class "MathJax.InputJax"
     let FunctionListClass = Class "MathJax.FunctionList"
     let OutputJaxClass = Class "MathJax.OutputJax"
-    let MathJaxStartupClass = Class "MathJax.Startup"
     let HandlerClass = Class "MathJax.Handler"
-    let MathJaxLoaderClass = Class "MathJax.Loader"
 
     let ContainerList = T<string> + T<obj> + !|T<obj> + !|(!|T<obj>)
     let OptionList = T<obj>
@@ -137,41 +135,6 @@ module MathJaxV3 =
                 "package" =@ T<string> 
             ]
 
-    let LoaderConfig =
-        Pattern.Config "LoaderConfig" { 
-            Required = []
-            Optional = [ 
-                "paths", T<obj>
-                "source", T<obj>
-                "dependencies", T<obj>
-                "provides", T<obj>
-                "load", !|T<string>
-                "ready", T<string> ^-> T<unit> + T<string>
-                "failed", PackageError ^-> T<unit>
-                "require", T<string> ^-> T<obj>
-                "pathFilters", !|T<obj>
-                "versionWarnings", T<bool> 
-            ] 
-        }
-
-    let TexConfig =
-        Pattern.Config "TexConfig" { 
-            Required = []
-            Optional = [ 
-                "inlineMath", !|T<string * string>
-                "displayMath", !|T<string * string>
-                "packages", !|T<string> 
-            ] 
-        }
-
-    let AsciiMathConfig =
-        Pattern.Config "AsciiMathConfig" { 
-            Required = []
-            Optional = [ 
-                "delimiters", !|T<string * string> 
-            ] 
-        }
-
     let ChtmlConfig =
         Pattern.Config "ChtmlConfig" { 
             Required = []
@@ -181,30 +144,14 @@ module MathJaxV3 =
             ] 
         }
 
-    let StartupConfig =
-        Pattern.Config "StartupConfig" { 
-            Required = []
-            Optional = [ 
-                "input", !|T<string>
-                "output", T<string>
-                "handler", T<string>
-                "document", T<obj>
-                "adaptor", T<string>
-                "typeset", T<bool>
-                "ready", T<unit> ^-> T<unit>
-                "pageReady", T<unit> ^-> T<unit> 
-            ] 
-        }
-
     let MathJaxConfig =
         Pattern.Config "MathJaxConfig" { 
             Required = []
             Optional = [ 
-                "tex", TexConfig + T<obj>
-                "asciimath", AsciiMathConfig.Type
-                "chtml", ChtmlConfig.Type
-                "startup", StartupConfig + T<obj>
-                "loader", LoaderConfig + T<obj>
+                "tex", T<obj>
+                "chtml", T<obj>
+                "startup", T<obj>
+                "loader", T<obj>
             ] 
         }
 
@@ -330,7 +277,7 @@ module MathJaxV3 =
 
               "processStrings" =? T<bool>
 
-              "options" =? OptionList
+              "options" =? OptionList 
 
               "preFilters" =? FunctionListClass
 
@@ -647,69 +594,68 @@ module MathJaxV3 =
             ]
         |> ignore
 
-    MathJaxLoaderClass
-        |+> Static
-            [
-                // properties
-                "versions" =? T<obj>
-                "pathFilters" =? FunctionListClass
+    let MathJaxLoaderConfig = 
+        Pattern.Config "MathJaxLoaderConfig" {
+            Required = []
+            Optional = [
+                "versions", T<obj>
+                "pathFilters", FunctionListClass.Type
 
-                // methods
-                "ready" => !+T<string> ^-> T<Promise<_>>[!|T<string>]
-                "load" => !+T<string> ^-> T<Promise<_>>[T<unit> + !|T<string>]
-                "preLoad" => !+T<string> ^-> T<unit>
-                "defaultReady" => T<unit> ^-> T<unit>
-                "getRoot" => T<unit> ^-> T<string>
-                "checkVersion" => T<string>?name * T<string>?version * !?T<string>?_type ^-> T<bool> 
+                "ready", !+T<string> ^-> T<Promise<unit>>
+                "load", !+T<string> ^-> T<Promise<_>>[T<unit> + !|T<string>]
+                "preLoad", !+T<string> ^-> T<unit>
+                "defaultReady", T<unit> ^-> T<unit>
+                "getRoot", T<unit> ^-> T<string>
+                "checkVersion", T<string> * T<string> * !?T<string> ^-> T<bool>
+
             ]
-        |> ignore
+        }
 
-    MathJaxStartupClass
-        |+> Static
-            [
-                // properties
-                "constructors" =? T<obj>
-                "input" =@ !|InputJaxClass
-                "output" =@ OutputJaxClass
-                "handler" =? HandlerClass
-                "adaptor" =? DOMAdaptorClass
-                "elements" =@ T<obj>
-                "document" =? MathDocumentClass
+    let MathJaxStartupConfig = 
+        Pattern.Config "MathJaxStartupConfig" {
+            Required = []
+            Optional = [
+                "constructors", T<obj>
+                "input", !|InputJaxClass
+                "output", OutputJaxClass.Type
+                "handler", HandlerClass.Type
+                "adaptor", DOMAdaptorClass.Type
+                "elements", T<obj>
+                "document", MathDocumentClass.Type
 
-                "promiseResolve" =@ (T<unit> ^-> T<unit>)
-                "promiseReject" =@ (T<obj> ^-> T<unit>)
-                "promise" =? T<Promise<unit>>
-                "pagePromise" =? T<Promise<unit>>
+                "promiseResolve", T<unit> ^-> T<unit>
+                "promiseReject", T<obj> ^-> T<unit>
+                "promise", T<Promise<unit>>
+                "pagePromise", T<Promise<unit>>
 
-                // methods
-                "toMML" => MmlNode?node ^-> T<string>
-                "registerConstructor" => T<string>?name * T<obj>?constructor ^-> T<unit>
+                "toMML", MmlNode?node ^-> T<string>
+                "registerConstructor", T<string>?name * T<obj>?constructor ^-> T<unit>
 
-                "useHandler" => T<string>?name * !?T<bool>?force ^-> T<unit>
-                "useAdaptor" => T<string>?name * !?T<bool>?force ^-> T<unit>
-                "useInput" => T<string>?name * !?T<bool>?force ^-> T<unit>
-                "useOutput" => T<string>?name * !?T<bool>?force ^-> T<unit>
+                "useHandler", T<string>?name * !?T<bool>?force ^-> T<unit>
+                "useAdaptor", T<string>?name * !?T<bool>?force ^-> T<unit>
+                "useInput", T<string>?name * !?T<bool>?force ^-> T<unit>
+                "useOutput", T<string>?name * !?T<bool>?force ^-> T<unit>
 
-                "extendHandler" => (HandlerClass?handler ^-> HandlerClass)?extend * !?T<int>?priority ^-> T<unit>
+                "extendHandler", (HandlerClass?handler ^-> HandlerClass)?extend * !?T<int>?priority ^-> T<unit>
 
-                "defaultReady" => T<unit> ^-> T<unit>
-                "defaultPageReady" => T<unit> ^-> T<Promise<unit>>
+                "defaultReady", T<unit> ^-> T<unit>
+                "defaultPageReady", T<unit> ^-> T<Promise<unit>>
 
-                "getComponents" => T<unit> ^-> T<unit>
-                "makeMethods" => T<unit> ^-> T<unit>
-                "makeTypesetMethods" => T<unit> ^-> T<unit>
+                "getComponents", T<unit> ^-> T<unit>
 
-                "makeOutputMethods" => T<string>?iname * T<string>?oname * InputJaxClass?input ^-> T<unit>
-                "makeMmlMethods" => T<string>?name * InputJaxClass?input ^-> T<unit>
-                "makeResetMethod" => T<string>?name * InputJaxClass?input ^-> T<unit>
+                "makeMethods", T<unit> ^-> T<unit>
+                "makeTypesetMethods", T<unit> ^-> T<unit>
+                "makeOutputMethods", T<string>?iname * T<string>?oname * InputJaxClass?input ^-> T<unit>
+                "makeMmlMethods", T<string>?name * InputJaxClass?input ^-> T<unit>
+                "makeResetMethod", T<string>?name * InputJaxClass?input ^-> T<unit>
 
-                "getInputJax" => T<unit> ^-> !|InputJaxClass
-                "getOutputJax" => T<unit> ^-> OutputJaxClass
-                "getAdaptor" => T<unit> ^-> DOMAdaptorClass
-                "getHandler" => T<unit> ^-> HandlerClass
-                "getDocument" => !?T<obj>?root ^-> MathDocumentClass 
+                "getInputJax", T<unit> ^-> !|InputJaxClass
+                "getOutputJax", T<unit> ^-> OutputJaxClass
+                "getAdaptor", T<unit> ^-> DOMAdaptorClass
+                "getHandler", T<unit> ^-> HandlerClass
+                "getDocument", !?T<obj>?root ^-> MathDocumentClass
             ]
-        |> ignore
+        }
 
     MathJaxClass
         |+> Static
@@ -717,25 +663,23 @@ module MathJaxV3 =
                 // properties
                 "version" =? T<string>
 
-                "startup" =@ MathJaxStartupClass
+                "startup" =@ MathJaxStartupConfig
 
                 "options" =@ T<obj>
 
-                "debug" =@ T<bool>
-
                 "config" =@ MathJaxConfig
 
-                "loader" =@ MathJaxLoaderClass
+                "loader" =@ MathJaxLoaderConfig
 
                 // typeset
-                "typeset" => !?(!|T<obj>) ^-> T<unit>
+                "typeset" => !? T<obj> * !? T<obj> ^-> T<unit>
 
-                "typesetPromise" => !?(!|(T<obj> + T<obj>)) ^-> T<Promise<unit>>
+                "typesetPromise" => !? T<obj> * !? T<obj> ^-> T<Promise<unit>>
 
                 "typesetClear" => !?T<obj> ^-> T<unit>
 
                 // TeX
-                "tex2chtml" => T<string> * !?T<obj> ^-> T<obj>
+                "tex2chtml" => T<string> * !?T<obj> ^-> T<obj> 
 
                 "tex2chtmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
 
@@ -743,7 +687,7 @@ module MathJaxV3 =
 
                 "tex2mmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
 
-                "texReset" => T<unit> ^-> T<unit>                
+                "texReset" => T<unit> ^-> T<unit>        
 
                 // CHTML
                 "chtmlStylesheet" => T<unit> ^-> T<obj>
@@ -796,16 +740,12 @@ module MathJaxV3 =
                 InputJaxClass
                 FunctionListClass
                 OutputJaxClass
-                MathJaxStartupClass
+                MathJaxStartupConfig
                 HandlerClass
-                MathJaxLoaderClass
+                MathJaxLoaderConfig
                 Metrics
                 Location
                 PackageError
-                LoaderConfig
-                TexConfig
-                AsciiMathConfig
                 ChtmlConfig
-                StartupConfig 
             ] 
         ]

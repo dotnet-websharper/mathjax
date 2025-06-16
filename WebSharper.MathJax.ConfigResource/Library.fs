@@ -8,23 +8,6 @@ type ConfigResource() =
             fun writer ->
                 let html = writer Scripts
 
-                let defaultValue = """
-                    MathJax =
-                        {
-                          loader: {
-                            load: [
-                              "input/tex", "input/mml",
-                              "[tex]/newcommand", "[tex]/action",
-                              "output/chtml"
-                            ]
-                          },
-                          tex: {
-                            inlineMath: [["$", "$"], ["\\(", "\\)"]],
-                            packages: ["base", "newcommand", "action"]
-                          }
-                        }
-                    """
-
                 let configJson =
                     ctx.GetSetting("MathjaxConfig")
                     |> Option.defaultValue ""

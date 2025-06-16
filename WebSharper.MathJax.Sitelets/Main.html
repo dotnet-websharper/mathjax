@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${Title}</title>
+    <style>
+        /* Don't show the not-yet-loaded templates */
+        [ws-template], [ws-children-template] {
+            display: none;
+        }
+
+        .math-output {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div ws-replace="Body">
+        <div id="main" ws-children-template="Main">
+            <div ws-onafterrender="PageInit">
+                <h2>MathJax API Test</h2>
+                <div id="container" class="math-output">
+                    $$x = {-b \pm \sqrt{b^2 - 4ac} \over 2a}$$
+                    <br>
+                    $ax^2 + bx + c = 0$
+                    <br>
+                    \(\int_0^1 x^2 dx\)
+                </div>
+
+                <div class="math-output" id="resultTex2CHTML"></div>
+                <div class="math-output" id="resultTex2MML"></div>
+                <div class="math-output" id="resultMathML2CHTML"></div>
+                <div class="math-output" id="resultMathML2MML"></div>
+            </div>
+        </div>
+    </div>
+    <script ws-replace="scripts"></script>
+</body>
+
+</html>

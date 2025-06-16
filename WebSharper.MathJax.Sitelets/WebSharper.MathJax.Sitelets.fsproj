@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Client.fs" />
+    <Compile Include="Site.fs" />
+    <Compile Include="Startup.fs" />
+    <Content Include="Main.html" CopyToPublishDirectory="Always" />
+    <None Include="package.json" />
+    <None Include="esbuild.config.mjs" />
+    <None Include="vite.config.js" />
+    <None Include="wsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WebSharper" Version="9.1.0.554" />    
+    <PackageReference Include="WebSharper.FSharp" Version="9.1.0.554" />
+    <PackageReference Include="WebSharper.UI" Version="9.1.0.554" />
+    <PackageReference Include="WebSharper.AspNetCore" Version="9.1.0.554" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WebSharper.MathJax">
+      <HintPath>..\WebSharper.MathJax\bin\Debug\netstandard2.0\WebSharper.MathJax.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSharper.MathJax.ConfigResource">
+      <HintPath>..\WebSharper.MathJax.ConfigResource\bin\Debug\netstandard2.0\WebSharper.MathJax.ConfigResource.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+  <Target Name="ESBuildBundle" AfterTargets="WebSharperCompile" Condition=" '$(Configuration)' == 'Release' ">
+    <Exec Command="npm install" />
+    <Exec Command="node ./esbuild.config.mjs" />
+  </Target>
+
+</Project>

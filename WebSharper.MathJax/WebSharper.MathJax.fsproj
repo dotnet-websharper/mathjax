@@ -6,7 +6,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-	  <Compile Include="MathJaxV3.fs" />
     <Compile Include="Main.fs" />    
   </ItemGroup>
   <ItemGroup>

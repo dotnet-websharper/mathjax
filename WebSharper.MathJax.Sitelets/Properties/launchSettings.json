@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WebSharper.MathJax.Sitelets": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51552;http://localhost:51553"
+    }
+  }
+}

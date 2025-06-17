@@ -1,16 +1,18 @@
-namespace WebSharper.MathJax.Sample
+﻿namespace WebSharper.MathJax.Sitelets
 
 open WebSharper
-open WebSharper.JavaScript
 open WebSharper.UI
-open WebSharper.UI.Client
 open WebSharper.UI.Templating
+open WebSharper.JavaScript
 open WebSharper.MathJax
 
 [<JavaScript>]
-module Client =
+module Templates =
 
-    type IndexTemplate = Template<"wwwroot/index.html", ClientLoad.FromDocument>
+    type MainTemplate = Templating.Template<"Main.html", ClientLoad.FromDocument, ServerLoad.WhenChanged>
+
+[<JavaScript>]
+module Client =
 
     let renderTex2CHTML(id: string) =
         let html = MathJax.Tex2chtml("$$x = {-b \\pm \\sqrt{b^2 - 4ac} \\over 2a}$$") |> As<Dom.Node>
@@ -38,9 +40,8 @@ module Client =
         let mml = MathJax.Mathml2mml(mathML) |> As<string>
         JS.Document.GetElementById(id).TextContent <- mml
 
-    [<SPAEntryPoint>]
     let Main () =
-        IndexTemplate.Main()
+        Templates.MainTemplate.Main()
             .PageInit(fun () ->
                 // Test: typeset()
                 MathJax.Typeset()
@@ -63,4 +64,3 @@ module Client =
                 renderMathML2MML("resultMathML2MML")
             )
             .Doc()
-        |> Doc.RunById "main"

@@ -1,7 +1,12 @@
 /.vs/
 /*.suo
-/*.Sample/Content/
-/*.Sample/Scripts/
+/*/build/
+/*/Content/
+/*/Scripts/
+/*/wwwroot/Scripts/
+/*/wwwroot/dist/
+/*/.vs
+/*/node_modules
 /build/
 /*/bin/
 /*/obj/

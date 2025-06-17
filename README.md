@@ -4,6 +4,8 @@ WebSharper Extensions for MathJax 3.2.2
 
 [MathJax](https://www.mathjax.org/) is a JavaScript tool to render math expression from TeX, MathML and AsciiMath formated text. It can be configured to render into one of many output formats. It can be used not to just to render static text into a formated math formula, but can be used to render dynamically changing text too.
 
+> Click [here](https://dotnet-websharper.github.io/mathjax/) to see a demo
+
 ## Version 3 Overview
 
 MathJax v3 introduces a modern, modular API that replaces the older `Hub.Queue` system. Configuration must now happen **before** loading the library. WebSharper supports this setup for both **SPA** and **Sitelets** projects.

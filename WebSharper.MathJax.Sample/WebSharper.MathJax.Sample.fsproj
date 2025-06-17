@@ -14,12 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="WebSharper.MathJax">
+    <ProjectReference Include="..\WebSharper.MathJax\WebSharper.MathJax.fsproj" />
+    <ProjectReference Include="..\WebSharper.MathJax.ConfigResource\WebSharper.MathJax.ConfigResource.fsproj" />
+    <!-- <Reference Include="WebSharper.MathJax">
       <HintPath>..\WebSharper.MathJax\bin\Debug\netstandard2.0\WebSharper.MathJax.dll</HintPath>
     </Reference>
     <Reference Include="WebSharper.MathJax.ConfigResource">
       <HintPath>..\WebSharper.MathJax.ConfigResource\bin\Debug\netstandard2.0\WebSharper.MathJax.ConfigResource.dll</HintPath>
-    </Reference>
+    </Reference> -->
   </ItemGroup>
 
   <Target Name="ESBuildBundle" AfterTargets="WebSharperCompile" Condition=" '$(Configuration)' == 'Release' ">
@@ -27,7 +29,6 @@
     <Exec Command="node ./esbuild.config.mjs" />
   </Target>
 
-  <Import Project="..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets" Condition="Exists('..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets')" />
   <Import Project="..\.paket\Paket.Restore.targets" />
 
 </Project>

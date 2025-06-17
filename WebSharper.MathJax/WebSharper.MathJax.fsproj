@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <WebSharperProject>Extension</WebSharperProject>
+    <WebSharperProject>binding</WebSharperProject>
     <WebSharperSourceMap>false</WebSharperSourceMap>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -9,9 +9,10 @@
     <Compile Include="Main.fs" />    
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="WebSharper.MathJax.ConfigResource">
+    <ProjectReference Include="..\WebSharper.MathJax.ConfigResource\WebSharper.MathJax.ConfigResource.fsproj" />
+    <!-- <Reference Include="WebSharper.MathJax.ConfigResource">
       <HintPath>..\WebSharper.MathJax.ConfigResource\bin\Debug\netstandard2.0\WebSharper.MathJax.ConfigResource.dll</HintPath>
-    </Reference>
+    </Reference> -->
   </ItemGroup>
   <Import Project="..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets" Condition="Exists('..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets')" />
   <Import Project="..\.paket\Paket.Restore.targets" />

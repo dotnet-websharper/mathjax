@@ -14,13 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="WebSharper" Version="9.1.0.554" />    
-    <PackageReference Include="WebSharper.FSharp" Version="9.1.0.554" />
-    <PackageReference Include="WebSharper.UI" Version="9.1.0.554" />
-    <PackageReference Include="WebSharper.AspNetCore" Version="9.1.0.554" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="WebSharper.MathJax">
       <HintPath>..\WebSharper.MathJax\bin\Debug\netstandard2.0\WebSharper.MathJax.dll</HintPath>
     </Reference>
@@ -33,5 +26,8 @@
     <Exec Command="npm install" />
     <Exec Command="node ./esbuild.config.mjs" />
   </Target>
+
+  <Import Project="..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets" Condition="Exists('..\paket-files\wsbuild\github.com\dotnet-websharper\build-script\WebSharper.Fake.targets')" />
+  <Import Project="..\.paket\Paket.Restore.targets" />
 
 </Project>

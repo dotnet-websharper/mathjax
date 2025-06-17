@@ -14,6 +14,8 @@ tags
 files
     ../WebSharper.MathJax/bin/Release/netstandard2.0/WebSharper.MathJax.dll ==> lib/netstandard2.0
     ../WebSharper.MathJax/bin/Release/netstandard2.0/WebSharper.MathJax.xml ==> lib/netstandard2.0
+    ../WebSharper.MathJax.ConfigResource/bin/Release/netstandard2.0/WebSharper.MathJax.ConfigResource.dll ==> lib/netstandard2.0
+    ../WebSharper.MathJax.ConfigResource/bin/Release/netstandard2.0/WebSharper.MathJax.ConfigResource.xml ==> lib/netstandard2.0
 dependencies
     framework: netstandard2.0
             WebSharper ~> LOCKEDVERSION:[3]

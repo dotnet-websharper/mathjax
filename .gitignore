@@ -1,5 +1,6 @@
 /.vs/
 /*.suo
+/*/build/
 /*/Content/
 /*/Scripts/
 /*/wwwroot/Scripts/

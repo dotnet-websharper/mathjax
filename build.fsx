@@ -5,7 +5,7 @@
 #r "nuget: Fake.DotNet.Cli"
 #r "nuget: Fake.DotNet.AssemblyInfoFile"
 #r "nuget: Fake.DotNet.Paket"
-#r "nuget: Paket.Core, 8.1.0-alpha004"
+#r "nuget: Paket.Core, 12.0.0-alpha001"
 #r "nuget: MSBuild.StructuredLogger"
 
 
@@ -32,9 +32,9 @@ let targets =
             Attributes =
                     [
                         AssemblyInfo.Company "IntelliFactory"
-                        AssemblyInfo.Copyright "(c) IntelliFactory 2023"
+                        AssemblyInfo.Copyright "(c) IntelliFactory 2026"
                         AssemblyInfo.Title "https://github.com/dotnet-websharper/mathjax"
-                        AssemblyInfo.Product "WebSharper MathJax 2.7.1"
+                        AssemblyInfo.Product "WebSharper MathJax 4.1.3"
                     ]
         }
     |> MakeTargets

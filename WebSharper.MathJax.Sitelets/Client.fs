@@ -14,53 +14,51 @@ module Templates =
 [<JavaScript>]
 module Client =
 
+    let texSource = @"x = {-b \pm \sqrt{b^2-4ac} \over 2a}"
+
+    let mathmlSource =
+        """<math xmlns="http://www.w3.org/1998/Math/MathML">
+             <msup><mi>x</mi><mn>2</mn></msup><mo>+</mo>
+             <mi>x</mi><mo>+</mo><mn>1</mn><mo>=</mo><mn>0</mn>
+           </math>"""
+
     let renderTex2CHTML(id: string) =
-        let html = MathJax.Tex2chtml("$$x = {-b \\pm \\sqrt{b^2 - 4ac} \\over 2a}$$") |> As<Dom.Node>
+        let html = MathJax.Tex2chtml(texSource)
         JS.Document.GetElementById(id).AppendChild(html) |> ignore
 
     let renderTex2MML(id: string) =
-        let mml = MathJax.Tex2mml("$$x = {-b \\pm \\sqrt{b^2 - 4ac} \\over 2a}$$") |> As<string>
-        JS.Document.GetElementById(id).TextContent <- mml
+        JS.Document.GetElementById(id).TextContent <- MathJax.Tex2mml(texSource)
 
     let renderMathML2CHTML(id: string) =
-        let mathML = """
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mi>x</mi> <mo>=</mo> <mrow data-mjx-texclass="ORD"> <mfrac> <mrow> <mo>&#x2212;</mo> <mi>b</mi> <mo>&#xB1;</mo> <msqrt> <msup> <mi>b</mi> <mn>2</mn> </msup> <mo>&#x2212;</mo> <mn>4</mn> <mi>a</mi> <mi>c</mi> </msqrt> </mrow> <mrow> <mn>2</mn> <mi>a</mi> </mrow> </mfrac> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow>
-        </math>
-        """
-        let html = MathJax.Mathml2chtml(mathML) |> As<Dom.Node>
+        let html = MathJax.Mathml2chtml(mathmlSource)
         JS.Document.GetElementById(id).AppendChild(html) |> ignore
 
     let renderMathML2MML(id: string) =
-        let mathML = """
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mi>x</mi> <mo>=</mo> <mrow data-mjx-texclass="ORD"> <mfrac> <mrow> <mo>&#x2212;</mo> <mi>b</mi> <mo>&#xB1;</mo> <msqrt> <msup> <mi>b</mi> <mn>2</mn> </msup> <mo>&#x2212;</mo> <mn>4</mn> <mi>a</mi> <mi>c</mi> </msqrt> </mrow> <mrow> <mn>2</mn> <mi>a</mi> </mrow> </mfrac> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow> <mrow data-mjx-texclass="ORD"> <mo>$</mo> </mrow>
-        </math>
-        """
-        let mml = MathJax.Mathml2mml(mathML) |> As<string>
-        JS.Document.GetElementById(id).TextContent <- mml
+        JS.Document.GetElementById(id).TextContent <- MathJax.Mathml2mml(mathmlSource)
+
+    let renderAsciiMath2CHTML(id: string) =
+        let html = MathJax.Asciimath2chtml(@"sum_(i=1)^n i^3=((n(n+1))/2)^2")
+        JS.Document.GetElementById(id).AppendChild(html) |> ignore
+
+    let renderAsciiMath2MML(id: string) =
+        JS.Document.GetElementById(id).TextContent <-
+            MathJax.Asciimath2mml(@"sum_(i=1)^n i^3=((n(n+1))/2)^2")
 
     let Main () =
         Templates.MainTemplate.Main()
             .PageInit(fun () ->
-                // Test: typeset()
-                MathJax.Typeset()
-
-                // Test: typesetPromise()
-                MathJax.TypesetPromise().Then(fun _ ->
-                    Console.Log("✅ typesetPromise finished")
+                // typesetPromise is the recommended entry point in v4: it
+                // waits for font data and any pending typesetting.
+                MathJax.TypesetPromise().Then(fun () ->
+                    MathJax.WhenReady(fun () ->
+                        renderTex2CHTML("resultTex2CHTML")
+                        renderTex2MML("resultTex2MML")
+                        renderMathML2CHTML("resultMathML2CHTML")
+                        renderMathML2MML("resultMathML2MML")
+                        renderAsciiMath2CHTML("resultAsciiMath2CHTML")
+                        renderAsciiMath2MML("resultAsciiMath2MML")
+                        null
+                    ) |> ignore
                 ) |> ignore
-
-                // Test: tex2chtml
-                renderTex2CHTML("resultTex2CHTML")
-
-                // Test: tex2mml
-                renderTex2MML("resultTex2MML")
-
-                //Test: mathml2chtml
-                renderMathML2CHTML("resultMathML2CHTML")
-
-                // Test: mathml2mml
-                renderMathML2MML("resultMathML2MML")
             )
             .Doc()

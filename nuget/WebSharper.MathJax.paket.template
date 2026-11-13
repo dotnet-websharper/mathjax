@@ -8,7 +8,7 @@ repositoryUrl https://github.com/dotnet-websharper/mathjax/
 licenseUrl https://github.com/dotnet-websharper/mathjax/blob/master/LICENSE.md
 iconUrl https://github.com/dotnet-websharper/core/raw/websharper50/tools/WebSharper.png
 description
-    WebSharper Extensions for MathJax 2.7.1
+    WebSharper bindings for MathJax 4.x (4.1.3+)
 tags
     Web JavaScript F# C#
 files

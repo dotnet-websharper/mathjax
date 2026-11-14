@@ -19,7 +19,7 @@ This repository contains:
 | `WebSharper.MathJax` | The WIG binding: the `MathJax` global and its types (`MathDocument`, `MathItem`, `InputJax`, `OutputJax`, `DOMAdaptor`, `Menu`, `Loader`, …), the configuration types (`TeXInputConfig`, `ChtmlConfig`, `SvgConfig`, `MathJaxStartupConfig`, `MathJaxLoaderConfig`, …) and the AssemblyWide resource that loads the MathJax component. |
 | `WebSharper.MathJax.ConfigResource` | A WebSharper resource that emits the `MathJax = { … }` configuration before the component script. Used by server-side (Sitelets) applications, where the configuration comes from `appsettings.json`. |
 | `WebSharper.MathJax.Sample` | A static WebSharper SPA (esbuild → `dist/`) that exercises the whole surface: page typesetting, dynamic typesetting, all conversions in both sync and promise form, and the startup/loader/document APIs. |
-| `WebSharper.MathJax.Sitelets` | A Sitelets sample that shows the `mathjaxConfig` setting injected before the component. |
+| `WebSharper.MathJax.Sitelets` | A server-rendered Sitelets sample: shows the `mathjaxConfig` setting injected before the component by `ConfigResource`, and exercises the same client-side WebSharper.UI/API surface (theme switcher included). |
 
 ## Live demos
 
@@ -266,6 +266,28 @@ dotnet serve -d dist -p 8080
 
 Open <http://localhost:8080/>. The page requires network access to the jsDelivr
 CDN for the MathJax component and its font files.
+
+### Sitelets sample
+
+`WebSharper.MathJax.Sitelets` is the server-rendered counterpart. It shows the
+`ConfigResource` path: the MathJax configuration comes from
+`appsettings.json` (`websharper.mathjaxConfig`) and is injected **before** the
+component script, which is the part a static page can't exercise. The client
+code is written in the same modern WebSharper.UI style (a `Template`, `Var`s
+and holes), covers the same surface (page typesetting, dynamic
+`typesetClear`/`typesetPromise` preview, all conversions in sync and promise
+form, startup/loader/document diagnostics), and has the same light/dark theme
+switcher (persisted in `localStorage`).
+
+```bash
+dotnet run --project WebSharper.MathJax.Sitelets -c Release
+# https://localhost:51552 (or http://localhost:51553)
+```
+
+The Sitelets sample is built as part of the solution but is not deployed to
+GitHub Pages.
+
+![MathJax Sitelets sample](docs/sitelets.png)
 
 ## Build from source
 

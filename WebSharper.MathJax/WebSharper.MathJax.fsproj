@@ -4,6 +4,10 @@
     <WebSharperProject>binding</WebSharperProject>
     <WebSharperSourceMap>false</WebSharperSourceMap>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Product>WebSharper.MathJax 4.1.3+</Product>
+    <Title>https://github.com/dotnet-websharper/mathjax/</Title>
+    <Company>IntelliFactory</Company>
+    <Copyright>(c) IntelliFactory 2026</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.fs" />    

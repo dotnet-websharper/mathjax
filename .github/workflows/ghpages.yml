@@ -1,4 +1,4 @@
-﻿name: Build and Deploy to GitHub Pages
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
@@ -6,72 +6,59 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./WebSharper.MathJax.Sample
 
       - name: Install Paket as a .NET Tool
         run: dotnet tool restore
 
       - name: Add credentials for Paket
-        run:
-          dotnet tool run paket config
-            add-credentials https://nuget.pkg.github.com/dotnet-websharper/index.json
-            --username intellifactory-gh 
+        run: |
+          dotnet paket config add-credentials https://nuget.pkg.github.com/dotnet-websharper/index.json \
+            --username intellifactory-gh \
             --password ${{ secrets.PAT_PACKAGE }}
 
-      - name: Restore Dependencies Using Paket
-        run: dotnet tool run paket restore
-
       - name: Add GitHub registry NuGet source
-        run: 
-          dotnet nuget 
-            add source https://nuget.pkg.github.com/dotnet-websharper/index.json 
-            --name github 
-            --username intellifactory-gh 
-            --password ${{ secrets.PAT_PACKAGE }} 
+        run: |
+          dotnet nuget add source https://nuget.pkg.github.com/dotnet-websharper/index.json \
+            --name github \
+            --username intellifactory-gh \
+            --password ${{ secrets.PAT_PACKAGE }} \
             --store-password-in-clear-text
 
-      - name: Build WebSharper.MathJax.ConfigResource
-        run: dotnet build WebSharper.MathJax.ConfigResource/WebSharper.MathJax.ConfigResource.fsproj
-
-      - name: Build WebSharper.MathJax
-        run: dotnet build WebSharper.MathJax/WebSharper.MathJax.fsproj
-
-      - name: Build Sample Project in Release mode
-        run: dotnet build --configuration Release
-        working-directory: ./WebSharper.MathJax.Sample
-
-      - name: Run Vite build
-        run: npx vite build
-        working-directory: ./WebSharper.MathJax.Sample
-
-      - name: Copy missing static assets
+      - name: Prime Paket Git cache for build-script
         run: |
-          mkdir -p WebSharper.MathJax.Sample/wwwroot/dist/Scripts
-          cp WebSharper.MathJax.Sample/wwwroot/Scripts/*.css WebSharper.MathJax.Sample/wwwroot/dist/Scripts/
-          cp WebSharper.MathJax.Sample/wwwroot/Scripts/*.head.js WebSharper.MathJax.Sample/wwwroot/dist/Scripts/
+          cache="$HOME/.paket/git/db/build-script"
+          rm -rf "$cache"
+          mkdir -p "$(dirname "$cache")"
+          git clone --mirror https://github.com/dotnet-websharper/build-script "$cache"
+
+      - name: Restore dependencies using Paket
+        run: dotnet paket restore
+
+      - name: Build sample in Release
+        run: dotnet build WebSharper.MathJax.Sample/WebSharper.MathJax.Sample.fsproj --configuration Release
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: WebSharper.MathJax.Sample/wwwroot/dist
+          publish_dir: dist

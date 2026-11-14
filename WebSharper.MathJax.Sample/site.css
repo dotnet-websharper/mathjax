@@ -1,0 +1,246 @@
+:root {
+    color-scheme: light;
+    --bg: #f6f7fb;
+    --bg-card: #ffffff;
+    --bg-soft: #eef1f8;
+    --bg-code: #f3f4f8;
+    --text: #1f2430;
+    --text-muted: #5a6274;
+    --border: #dfe3ee;
+    --accent: #4f46e5;
+    --accent-soft: #ece9ff;
+    --accent-contrast: #ffffff;
+    --shadow: 0 1px 2px rgba(24, 30, 50, .06), 0 8px 24px rgba(24, 30, 50, .06);
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f1220;
+    --bg-card: #171b2c;
+    --bg-soft: #1e2338;
+    --bg-code: #121627;
+    --text: #e8ebf5;
+    --text-muted: #a2acc5;
+    --border: #2a3150;
+    --accent: #8b83ff;
+    --accent-soft: #262b47;
+    --accent-contrast: #0f1220;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px rgba(0, 0, 0, .35);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+}
+
+a {
+    color: var(--accent);
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1.25rem 2rem;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+}
+
+.app-titles h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -.01em;
+}
+
+.app-titles p {
+    margin: .2rem 0 0;
+    color: var(--text-muted);
+    font-size: .92rem;
+}
+
+.app-actions {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.app-source {
+    color: var(--text-muted);
+    font-size: .9rem;
+    text-decoration: none;
+}
+
+.app-source:hover {
+    color: var(--accent);
+}
+
+.page {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 3rem;
+}
+
+.notice {
+    margin: 0 0 1.25rem;
+    padding: .6rem .9rem;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--text);
+    font-size: .92rem;
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 1.25rem 1.4rem 1.4rem;
+    margin-bottom: 1.4rem;
+}
+
+.card-header h2 {
+    margin: 0 0 .35rem;
+    font-size: 1.12rem;
+}
+
+.card-header p {
+    margin: 0 0 .9rem;
+    color: var(--text-muted);
+    font-size: .92rem;
+}
+
+.card h3 {
+    margin: 1.25rem 0 .5rem;
+    font-size: .98rem;
+}
+
+.card h4 {
+    margin: 0 0 .4rem;
+    font-size: .82rem;
+    color: var(--text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 600;
+}
+
+.math-stage {
+    padding: .8rem 1rem;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: var(--bg-soft);
+    overflow-x: auto;
+}
+
+.math-stage p {
+    margin: .35rem 0;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: .9rem;
+}
+
+.btn {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--text);
+    border-radius: 8px;
+    padding: .45rem .85rem;
+    font-size: .9rem;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease, transform .05s ease;
+}
+
+.btn:hover {
+    border-color: var(--accent);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-contrast);
+}
+
+.input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-code);
+    color: var(--text);
+    padding: .6rem .75rem;
+    font-size: .95rem;
+}
+
+.code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .88rem;
+    resize: vertical;
+}
+
+.conversions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: .75rem;
+}
+
+.conversion {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-soft);
+    padding: .75rem .85rem;
+    overflow-x: auto;
+}
+
+.conversion-output {
+    min-height: 2.2rem;
+    overflow-x: auto;
+}
+
+.mml,
+.diagnostics {
+    margin: 0;
+    padding: .55rem .7rem;
+    border-radius: 8px;
+    background: var(--bg-code);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .78rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 14rem;
+    overflow: auto;
+}
+
+.status {
+    margin: .65rem 0 0;
+    color: var(--text-muted);
+    font-size: .88rem;
+}
+
+.theme-toggle {
+    min-width: 8.5rem;
+}
+
+/* MathJax's CHTML output picks up the page colours. */
+mjx-container {
+    color: var(--text);
+}

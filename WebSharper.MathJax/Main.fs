@@ -25,6 +25,11 @@ open WebSharper.InterfaceGenerator
 
 module Definition =
     let MathJaxClass = Class "MathJax"
+    let MathJaxStartupClass = Class "MathJaxStartup"
+    let MathJaxLoaderClass = Class "MathJaxLoader"
+    let InputJaxListClass = Class "InputJaxList"
+    let MenuClass = Class "MathJax.Menu"
+    let PackageClass = Class "MathJax.Package"
     let HandlerListClass = Class "MathJax.HandlerList"
     let MathDocumentClass = Class "MathJax.MathDocument"
     let MathListClass = Class "MathJax.MathList"
@@ -46,6 +51,20 @@ module Definition =
     let MmlNode = T<obj>
     let MmlFactoryClass = T<obj>
 
+    // Options accepted by the conversion helpers (`tex2chtml`, `asciimath2svg`, ...).
+    let ConversionOptions =
+        Pattern.Config "ConversionOptions" {
+            Required = []
+            Optional = [
+                "display", T<bool>
+                "em", T<float>
+                "ex", T<float>
+                "containerWidth", T<float>
+                "scale", T<float>
+                "family", T<string>
+            ]
+        }
+
     let ResetList =
         Pattern.Config "ResetList" { 
             Required = []
@@ -64,8 +83,9 @@ module Definition =
                 "em", T<float>
                 "ex", T<float>
                 "containerWidth", T<float>
-                "lineWidth", T<float>
-                "scale", T<float> 
+                "scale", T<float>
+                "family", T<string>
+                "display", T<bool>
             ] 
         }
 
@@ -73,8 +93,8 @@ module Definition =
         Pattern.Config "Location" { 
             Required = []
             Optional = [ 
-                "i", T<float>
-                "n", T<float>
+                "i", T<int>
+                "n", T<int>
                 "delim", T<string>
                 "node", T<obj> 
             ] 
@@ -135,24 +155,183 @@ module Definition =
                 "package" =@ T<string> 
             ]
 
+    // `(jax: InputJax, error: Error) => void` - `tex.formatError`.
+    let FormatError = InputJaxClass * T<Error> ^-> T<unit>
+
+    let TeXInputConfig =
+        Pattern.Config "TeXInputConfig" {
+            Required = []
+            Optional = [
+                "inlineMath", T<obj>
+                "displayMath", T<obj>
+                "packages", T<obj>
+                "macros", T<obj>
+                "processEscapes", T<bool>
+                "processEnvironments", T<bool>
+                "processRefs", T<bool>
+                "numberPattern", T<string>
+                "tagSide", T<string>
+                "tagIndent", T<string>
+                "useLabelIds", T<bool>
+                "maxBuffer", T<int>
+                "maxMacros", T<int>
+                "maxTemplateSubtitutions", T<int>
+                "mathStyle", T<string>
+                "formatError", FormatError
+            ]
+        }
+
+    let MathMLInputConfig =
+        Pattern.Config "MathMLInputConfig" {
+            Required = []
+            Optional = [
+                "parseAs", T<string>
+                "forceReparse", T<bool>
+                "mmlFilters", !|T<obj>
+                "verify", T<obj>
+            ]
+        }
+
+    let AsciiMathInputConfig =
+        Pattern.Config "AsciiMathInputConfig" {
+            Required = []
+            Optional = [
+                "fixphi", T<bool>
+                "decipher", T<bool>
+                "decimalsign", T<string>
+                "mathvariant", T<string>
+                "delimiters", T<obj>
+            ]
+        }
+
+    let LinebreakConfig =
+        Pattern.Config "LinebreakConfig" {
+            Required = []
+            Optional = [
+                "inline", T<bool>
+                "width", T<string>
+                "lineleading", T<float>
+                "LinebreakVisitor", T<obj>
+            ]
+        }
+
+    let CommonOutputConfig =
+        [
+            "scale", T<float>
+            "minScale", T<float>
+            "mtextInheritFont", T<bool>
+            "merrorInheritFont", T<bool>
+            "mtextFont", T<string>
+            "merrorFont", T<string>
+            "mathmlSpacing", T<bool>
+            "skipAttributes", T<obj>
+            "exFactor", T<float>
+            "displayAlign", T<string>
+            "displayIndent", T<string>
+            "displayOverflow", T<string>
+            "linebreaks", LinebreakConfig.Type
+            "font", T<string>
+            "fontExtensions", !|T<obj>
+            "htmlHDW", T<string>
+            "wrapperFactory", T<obj>
+            "fontData", T<obj>
+            "fontPath", T<string>
+            "styleJson", T<obj>
+        ]
+
     let ChtmlConfig =
         Pattern.Config "ChtmlConfig" { 
             Required = []
-            Optional = [ 
+            Optional = [
+                "adaptiveCSS", T<bool>
+                "matchFontHeight", T<bool>
                 "fontURL", T<string>
-                "font", T<string> 
-            ] 
+            ] @ CommonOutputConfig
         }
 
-    let MathJaxConfig =
-        Pattern.Config "MathJaxConfig" { 
+    let SvgConfig =
+        Pattern.Config "SvgConfig" {
             Required = []
-            Optional = [ 
-                "tex", T<obj>
-                "chtml", T<obj>
-                "startup", T<obj>
-                "loader", T<obj>
-            ] 
+            Optional = [
+                "blacker", T<int>
+                "fontCache", T<string>
+                "localID", T<string>
+                "useXlink", T<bool>
+                "internalSpeechTitles", T<bool>
+                "titleID", T<int>
+            ] @ CommonOutputConfig
+        }
+
+    let MenuSettings =
+        Pattern.Config "MenuSettings" {
+            Required = []
+            Optional = [
+                "showSRE", T<bool>
+                "showLatex", T<bool>
+                "texHints", T<bool>
+                "semantics", T<bool>
+                "zoom", T<string>
+                "zscale", T<string>
+                "renderer", T<string>
+                "alt", T<bool>
+                "cmd", T<bool>
+                "ctrl", T<bool>
+                "shift", T<bool>
+                "scale", T<string>
+                "overflow", T<string>
+                "breakInline", T<bool>
+                "autocollapse", T<bool>
+                "collapsible", T<bool>
+                "enrich", T<bool>
+                "assistiveMml", T<bool>
+                "backgroundColor", T<string>
+                "backgroundOpacity", T<string>
+                "braille", T<bool>
+                "brailleCode", T<string>
+                "brailleSpeech", T<bool>
+                "brailleCombine", T<bool>
+                "foregroundColor", T<string>
+                "foregroundOpacity", T<string>
+                "highlight", T<string>
+                "infoPrefix", T<bool>
+                "infoRole", T<bool>
+                "infoType", T<bool>
+                "inTabOrder", T<bool>
+                "locale", T<string>
+                "magnification", T<string>
+                "magnify", T<string>
+                "speech", T<bool>
+                "speechRules", T<string>
+                "subtitles", T<bool>
+                "treeColoring", T<bool>
+                "viewBraille", T<bool>
+                "voicing", T<bool>
+                "help", T<bool>
+                "roleDescription", T<string>
+                "tabSelects", T<string>
+            ]
+        }
+
+    let MenuOptions =
+        Pattern.Config "MenuOptions" {
+            Required = []
+            Optional = [
+                "settings", MenuSettings.Type
+                "annotation", T<string>
+            ]
+        }
+
+    // The document options (`MathJax.config.options`).
+    let DocumentOptions =
+        Pattern.Config "DocumentOptions" {
+            Required = []
+            Optional = [
+                "skipHtmlTags", !|T<string>
+                "ignoreHtmlClass", T<string>
+                "processHtmlClass", T<string>
+                "enableMenu", T<bool>
+                "menuOptions", MenuOptions.Type
+            ]
         }
 
     FunctionListClass 
@@ -161,6 +340,8 @@ module Definition =
             "execute" => !+(!|T<obj>) ^-> T<bool>
 
             "asyncExecute" => !+(!|T<obj>) ^-> T<Promise<unit>> 
+
+            "addList" => !|(T<obj> + (T<obj> * T<int>)) ^-> T<unit>
         ]
         |> ignore
 
@@ -168,8 +349,10 @@ module Definition =
         |=> Nested [ AttributeData; PageBBox ]
         |+> Instance
             [
-              // property
+              // properties
               "document" =? T<obj>
+
+              "canMeasureNodes" =? T<bool>
 
               // methods
               "parse" => T<string>?text * !?T<string>?format ^-> T<obj>
@@ -190,6 +373,8 @@ module Definition =
 
               "getElements" => ContainerList?nodes * T<obj>?doc ^-> !|T<obj>
 
+              "getElement" => T<string>?selector * !?T<obj>?node ^-> T<obj>
+
               "contains" => T<obj>?container * T<obj>?node ^-> T<bool>
 
               "parent" => T<obj>?node ^-> T<obj>
@@ -202,7 +387,7 @@ module Definition =
 
               "replace" => T<obj>?nnode * T<obj>?onode ^-> T<obj>
 
-              "clone" => T<obj>?node ^-> T<obj>
+              "clone" => T<obj>?node * !?T<bool>?deep ^-> T<obj>
 
               "split" => T<obj>?node * T<int>?n ^-> T<obj>
 
@@ -234,6 +419,10 @@ module Definition =
 
               "setAttributes" => T<obj>?node * OptionList?def ^-> T<unit>
 
+              "setProperty" => T<obj>?node * T<string> * T<obj>?value ^-> T<unit>
+
+              "getProperty" => T<obj>?node * T<string> ^-> T<obj>
+
               "getAttribute" => T<obj>?node * T<string> ^-> T<string>
 
               "removeAttribute" => T<obj>?node * T<string> ^-> T<unit>
@@ -258,6 +447,8 @@ module Definition =
 
               "insertRules" => T<obj>?node * (!|T<string>)?rules ^-> T<unit>
 
+              "cssText" => T<obj>?node ^-> T<string>
+
               "fontSize" => T<obj>?node ^-> T<int>
 
               "fontFamily" => T<obj>?node ^-> T<string>
@@ -265,6 +456,8 @@ module Definition =
               "nodeSize" => T<obj>?node * !?T<int>?em * !?T<bool>?local ^-> !|T<float>
 
               "nodeBBox" => T<obj>?node ^-> PageBBox 
+
+              "createWorker" => (T<obj>?event ^-> T<unit>) * OptionList?options ^-> T<Promise<obj>>
             ]
         |> ignore
 
@@ -311,6 +504,7 @@ module Definition =
               "options" =? OptionList
               "postFilters" =? FunctionListClass
               "adaptor" =? DOMAdaptorClass
+              "font" =? T<obj>
 
               // methods
               "setAdaptor" => DOMAdaptorClass ^-> T<unit>
@@ -319,8 +513,14 @@ module Definition =
               "typeset" => MathItemClass * !?MathDocumentClass ^-> T<obj>
               "escaped" => MathItemClass * !?MathDocumentClass ^-> T<obj>
               "getMetrics" => MathDocumentClass ^-> T<unit>
+              "getMetricsFor" => T<Dom.Element> * T<bool> ^-> Metrics
               "styleSheet" => MathDocumentClass ^-> T<obj>
-              "pageElements" => MathDocumentClass ^-> T<obj> 
+              "pageElements" => MathDocumentClass ^-> T<obj>
+              "addExtension" => T<obj> * !?T<string> ^-> !|T<string>
+              "updateFontStyles" => T<unit> ^-> T<unit>
+              "clearCache" => T<unit> ^-> T<unit>
+              "clearFontCache" => T<unit> ^-> T<unit>
+              "measureText" => T<string> * T<string> * !?T<obj> ^-> T<obj> 
             ]
         |> ignore
 
@@ -332,7 +532,7 @@ module Definition =
             [ 
                 "add" => T<obj>?item * !?T<int>?priority ^-> T<obj>
 
-                "remove" => T<obj>?item ^-> T<unit> 
+                "remove" => T<obj>?item ^-> PrioritizedListClass 
             ]
         |> ignore
 
@@ -396,11 +596,13 @@ module Definition =
 
                 "removeFromDocument" => T<bool> ^-> T<unit>
 
-                "setMetrics" => T<float> * T<float> * T<float> * T<float> * T<float> ^-> T<unit>
+                "setMetrics" => T<float> * T<float> * T<float> * T<float> ^-> T<unit>
 
                 "state" => !?T<int> * !?T<bool> ^-> T<int>
 
                 "reset" => !?T<bool> ^-> T<unit> 
+
+                "clear" => T<unit> ^-> T<unit>
             ]
         |> ignore
 
@@ -435,11 +637,12 @@ module Definition =
                 "pop" => T<unit> ^-> T<obj>
                 "unshift" => !+T<obj> ^-> LinkedListClass
                 "shift" => T<unit> ^-> T<obj>
-                "remove" => !+T<obj> ^-> T<unit>
+                "remove" => !+T<obj> ^-> LinkedListClass
                 "clear" => T<unit> ^-> LinkedListClass
                 "insert" => T<obj> * !?SortFn ^-> LinkedListClass
                 "sort" => !?SortFn ^-> LinkedListClass
                 "merge" => LinkedListClass * !?SortFn ^-> LinkedListClass
+                "reversed" => T<unit> ^-> T<obj>
 
               ]
         |> ignore
@@ -525,13 +728,15 @@ module Definition =
 
                 "processed" =? BitFieldClass
 
-                "inputJax" =? !|InputJaxClass
+                "inputJax" =? InputJaxListClass
 
                 "outputJax" =? OutputJaxClass
 
                 "adaptor" =? DOMAdaptorClass
 
                 "mmlFactory" =? MmlFactoryClass
+
+                "menu" =? MenuClass
 
                 // methods
 
@@ -541,9 +746,29 @@ module Definition =
 
                 "render" => T<unit> ^-> MathDocumentClass
 
+                "renderPromise" => T<unit> ^-> T<Promise<obj>>
+
                 "rerender" => !?T<int> ^-> MathDocumentClass
 
+                "rerenderPromise" => !?T<int> ^-> T<Promise<obj>>
+
                 "convert" => T<string> * !?OptionList?options ^-> T<obj> + MmlNode
+
+                "convertPromise" => T<string> * !?OptionList?options ^-> T<Promise<obj>>
+
+                "whenReady" => (T<unit> ^-> T<obj>) ^-> T<Promise<obj>>
+
+                "actionPromises" => T<unit> ^-> T<Promise<obj>>
+
+                "clearPromises" => T<unit> ^-> T<unit>
+
+                "savePromise" => T<Promise<obj>> ^-> T<unit>
+
+                "done" => T<unit> ^-> T<Promise<unit>>
+
+                "addMenu" => T<unit> ^-> MathDocumentClass
+
+                "checkLoading" => T<unit> ^-> T<bool>
 
                 "findMath" => !?OptionList?options ^-> MathDocumentClass
 
@@ -594,68 +819,201 @@ module Definition =
             ]
         |> ignore
 
+    let PackageConfig =
+        Pattern.Config "PackageConfig" {
+            Required = []
+            Optional = [
+                "ready", T<string> ^-> T<obj>
+                "failed", PackageError ^-> T<unit>
+                "checkReady", T<unit> ^-> T<Promise<unit>>
+                "extraLoads", !|T<string>
+                "rendererExtensions", !|T<string>
+            ]
+        }
+
+    PackageClass
+        |+> Static [
+            "packages" =? T<obj>
+            "loadPromise" => T<string> ^-> T<Promise<unit>>
+            "resolvePath" => T<string> * !?T<bool> ^-> T<string>
+            "loadAll" => T<unit> ^-> T<unit>
+        ]
+        |+> Instance [
+            "name" =? T<string>
+            "isLoaded" =? T<bool>
+            "promise" =? T<Promise<string>>
+            "result" =? T<obj>
+            "hasFailed" =? T<bool>
+            "canLoad" =? T<bool>
+            "load" => T<unit> ^-> T<unit>
+        ]
+        |> ignore
+
+    // The `MathJax.loader` runtime object.
+    MathJaxLoaderClass
+        |+> Instance [
+            "ready" => !+T<string> ^-> T<Promise<obj>>
+            "load" => !+T<string> ^-> T<Promise<obj>>
+            "preLoaded" => !+T<string> ^-> T<unit>
+            "defaultReady" => T<unit> ^-> T<unit>
+            "getRoot" => T<unit> ^-> T<string>
+            "checkVersion" => T<string> * T<string> * !?T<string> ^-> T<bool>
+            "saveVersion" => T<string> ^-> T<unit>
+            "addPackageData" => T<string> * PackageConfig ^-> T<unit>
+            "pathFilters" =? FunctionListClass
+            "versions" =? T<obj>
+            "nestedLoads" =? !|T<Promise<obj>>
+        ]
+        |> ignore
+
+    // The `loader` section of the MathJax configuration.
     let MathJaxLoaderConfig = 
         Pattern.Config "MathJaxLoaderConfig" {
             Required = []
             Optional = [
-                "versions", T<obj>
+                "paths", T<obj>
+                "source", T<obj>
+                "dependencies", T<obj>
+                "provides", T<obj>
+                "load", !|T<string>
+                "ready", T<string> ^-> T<obj>
+                "failed", PackageError ^-> T<unit>
+                "require", T<string> ^-> T<obj>
                 "pathFilters", FunctionListClass.Type
-
-                "ready", !+T<string> ^-> T<Promise<unit>>
-                "load", !+T<string> ^-> T<Promise<_>>[T<unit> + !|T<string>]
-                "preLoad", !+T<string> ^-> T<unit>
-                "defaultReady", T<unit> ^-> T<unit>
-                "getRoot", T<unit> ^-> T<string>
-                "checkVersion", T<string> * T<string> * !?T<string> ^-> T<bool>
-
+                "versionWarnings", T<bool>
             ]
         }
 
+    // The `startup` section of the MathJax configuration.
     let MathJaxStartupConfig = 
         Pattern.Config "MathJaxStartupConfig" {
             Required = []
             Optional = [
-                "constructors", T<obj>
-                "input", !|InputJaxClass
-                "output", OutputJaxClass.Type
-                "handler", HandlerClass.Type
-                "adaptor", DOMAdaptorClass.Type
+                "input", !|T<string>
+                "output", T<string>
+                "handler", T<string>
+                "adaptor", T<string>
+                "document", T<string> + T<obj>
                 "elements", T<obj>
-                "document", MathDocumentClass.Type
-
-                "promiseResolve", T<unit> ^-> T<unit>
-                "promiseReject", T<obj> ^-> T<unit>
-                "promise", T<Promise<unit>>
-                "pagePromise", T<Promise<unit>>
-
-                "toMML", MmlNode?node ^-> T<string>
-                "registerConstructor", T<string>?name * T<obj>?constructor ^-> T<unit>
-
-                "useHandler", T<string>?name * !?T<bool>?force ^-> T<unit>
-                "useAdaptor", T<string>?name * !?T<bool>?force ^-> T<unit>
-                "useInput", T<string>?name * !?T<bool>?force ^-> T<unit>
-                "useOutput", T<string>?name * !?T<bool>?force ^-> T<unit>
-
-                "extendHandler", (HandlerClass?handler ^-> HandlerClass)?extend * !?T<int>?priority ^-> T<unit>
-
-                "defaultReady", T<unit> ^-> T<unit>
-                "defaultPageReady", T<unit> ^-> T<Promise<unit>>
-
-                "getComponents", T<unit> ^-> T<unit>
-
-                "makeMethods", T<unit> ^-> T<unit>
-                "makeTypesetMethods", T<unit> ^-> T<unit>
-                "makeOutputMethods", T<string>?iname * T<string>?oname * InputJaxClass?input ^-> T<unit>
-                "makeMmlMethods", T<string>?name * InputJaxClass?input ^-> T<unit>
-                "makeResetMethod", T<string>?name * InputJaxClass?input ^-> T<unit>
-
-                "getInputJax", T<unit> ^-> !|InputJaxClass
-                "getOutputJax", T<unit> ^-> OutputJaxClass
-                "getAdaptor", T<unit> ^-> DOMAdaptorClass
-                "getHandler", T<unit> ^-> HandlerClass
-                "getDocument", !?T<obj>?root ^-> MathDocumentClass
+                "typeset", T<bool>
+                "ready", T<unit> ^-> T<unit>
+                "pageReady", T<unit> ^-> T<Promise<unit>>
+                "invalidOption", T<string>
+                "optionError", T<string> * T<string> ^-> T<unit>
+                "polyfillHasOwn", T<bool>
+                "loadAllFontFiles", T<bool>
             ]
         }
+
+    // The `MathJax` global configuration object.
+    let MathJaxConfig =
+        Pattern.Config "MathJaxConfig" { 
+            Required = []
+            Optional = [ 
+                "tex", TeXInputConfig.Type
+                "mml", MathMLInputConfig.Type
+                "mathml", MathMLInputConfig.Type
+                "asciimath", AsciiMathInputConfig.Type
+                "chtml", ChtmlConfig.Type
+                "svg", SvgConfig.Type
+                "startup", MathJaxStartupConfig.Type
+                "loader", MathJaxLoaderConfig.Type
+                "options", DocumentOptions.Type
+                "a11y", T<obj>
+                "sre", T<obj>
+            ] 
+        }
+
+    // The `MathJax.startup` runtime object.
+    MathJaxStartupClass
+        |+> Instance [
+            "constructors" =? T<obj>
+            "input" =? InputJaxListClass
+            "output" =? OutputJaxClass
+            "handler" =? HandlerClass
+            "adaptor" =? DOMAdaptorClass
+            "elements" =? T<obj>
+            "document" =? MathDocumentClass
+            "extensions" =? PrioritizedListClass
+            "hasTypeset" =? T<bool>
+            "mathjax" =? T<obj>
+            "visitor" =? T<obj>
+
+            "promise" =? T<Promise<unit>>
+            "pagePromise" =? T<Promise<unit>>
+            "promiseResolve" => !?T<obj> ^-> T<unit>
+            "promiseReject" => T<obj> ^-> T<unit>
+
+            "toMML" => MmlNode?node ^-> T<string>
+            "registerConstructor" => T<string> * T<obj> ^-> T<unit>
+
+            "useHandler" => T<string> * !?T<bool> ^-> T<unit>
+            "useAdaptor" => T<string> * !?T<bool> ^-> T<unit>
+            "useInput" => T<string> * !?T<bool> ^-> T<unit>
+            "useOutput" => T<string> * !?T<bool> ^-> T<unit>
+
+            "extendHandler" => (HandlerClass ^-> HandlerClass) * !?T<int> ^-> T<unit>
+
+            "defaultReady" => T<unit> ^-> T<unit>
+            "defaultPageReady" => T<unit> ^-> T<Promise<unit>>
+            "defaultOptionError" => T<string> * T<string> ^-> T<unit>
+
+            "getComponents" => T<unit> ^-> T<unit>
+
+            "makeMethods" => T<unit> ^-> T<unit>
+            "makeTypesetMethods" => T<unit> ^-> T<unit>
+            "makeOutputMethods" => T<string> * T<string> * InputJaxClass ^-> T<unit>
+            "makeMmlMethods" => T<string> * InputJaxClass ^-> T<unit>
+            "makeResetMethod" => T<string> * InputJaxClass ^-> T<unit>
+
+            "typesetPromise" => !?T<obj> ^-> T<Promise<unit>>
+
+            "getInputJax" => T<unit> ^-> InputJaxListClass
+            "getOutputJax" => T<unit> ^-> OutputJaxClass
+            "getAdaptor" => T<unit> ^-> DOMAdaptorClass
+            "getHandler" => T<unit> ^-> HandlerClass
+            "getDocument" => !?T<obj> ^-> MathDocumentClass
+        ]
+        |> ignore
+
+    // The `MathJax.startup.document.inputJax` array, which also exposes the
+    // loaded input jax by name (matching `config.startup.input`).
+    InputJaxListClass
+        |+> Instance [
+            "" =@ InputJaxClass |> Indexed T<int>
+            "length" =? T<int>
+            "tex" =? InputJaxClass
+            "mml" =? InputJaxClass
+            "mathml" =? InputJaxClass
+            "asciimath" =? InputJaxClass
+        ]
+        |> ignore
+
+    // The `MathJax.startup.document.menu` context-menu object.
+    MenuClass
+        |+> Static [
+            "MENU_STORAGE" =? T<string>
+        ]
+        |+> Instance [
+            "loadingPromise" =? T<Promise<unit>>
+            "settings" =@ MenuSettings
+
+            "addMenu" => T<unit> ^-> MenuClass
+            "checkLoading" => T<unit> ^-> T<bool>
+            "clear" => T<unit> ^-> T<unit>
+            "resetDefaults" => T<unit> ^-> T<unit>
+            "setScale" => T<float> ^-> T<unit>
+            "setRenderer" => T<string> ^-> T<unit>
+            "setOutputJax" => T<string> * !?T<bool> ^-> T<Promise<unit>>
+            "setTabOrder" => T<bool> ^-> T<unit>
+            "setAssistiveMml" => T<bool> ^-> T<unit>
+            "applySettings" => T<unit> ^-> T<unit>
+            "saveUserSettings" => T<unit> ^-> T<unit>
+            "toMML" => MathItemClass ^-> T<string>
+            "toSVG" => MathItemClass ^-> T<Promise<string>>
+            "zoom" => T<obj> * T<obj> ^-> T<unit>
+        ]
+        |> ignore
 
     MathJaxClass
         |+> Static
@@ -663,65 +1021,86 @@ module Definition =
                 // properties
                 "version" =? T<string>
 
-                "startup" =@ MathJaxStartupConfig
+                "_" =? T<obj>
 
-                "options" =@ T<obj>
+                "startup" =@ MathJaxStartupClass
+
+                "options" =@ DocumentOptions
 
                 "config" =@ MathJaxConfig
 
-                "loader" =@ MathJaxLoaderConfig
+                "loader" =@ MathJaxLoaderClass
 
                 // typeset
-                "typeset" => !? T<obj> * !? T<obj> ^-> T<unit>
+                "typeset" => !?T<obj>?elements ^-> T<unit>
 
-                "typesetPromise" => !? T<obj> * !? T<obj> ^-> T<Promise<unit>>
+                "typesetPromise" => !?T<obj>?elements ^-> T<Promise<unit>>
 
-                "typesetClear" => !?T<obj> ^-> T<unit>
+                "typesetClear" => !?T<obj>?elements ^-> T<unit>
 
-                // TeX
-                "tex2chtml" => T<string> * !?T<obj> ^-> T<obj> 
+                // asynchronous coordination (v4)
+                "whenReady" => (T<unit> ^-> T<obj>) ^-> T<Promise<obj>>
 
-                "tex2chtmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
+                "done" => T<unit> ^-> T<Promise<unit>>
 
-                "tex2mml" => T<string> * !?T<obj> ^-> T<obj>
+                // TeX -> CHTML / SVG / MathML
+                "tex2chtml" => T<string> * !?ConversionOptions?options ^-> T<Dom.Node>
 
-                "tex2mmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
+                "tex2chtmlPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<Dom.Node>>
+
+                "tex2svg" => T<string> * !?ConversionOptions?options ^-> T<Dom.Node>
+
+                "tex2svgPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<Dom.Node>>
+
+                "tex2mml" => T<string> * !?ConversionOptions?options ^-> T<string>
+
+                "tex2mmlPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<string>>
 
                 "texReset" => T<unit> ^-> T<unit>        
 
-                // CHTML
-                "chtmlStylesheet" => T<unit> ^-> T<obj>
+                // CHTML / SVG
+                "chtmlStylesheet" => T<unit> ^-> T<Dom.Node>
 
-                "getMetricsFor" => T<obj> * T<bool> ^-> Metrics
+                "svgStylesheet" => T<unit> ^-> T<Dom.Node>
 
-                // AsciiMath
-                "asciimath2mml" => T<string> * !?T<obj> ^-> T<obj>
+                "getMetricsFor" => T<Dom.Element> * T<bool> ^-> Metrics
 
-                "asciimath2mmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
+                // AsciiMath -> CHTML / SVG / MathML
+                "asciimath2chtml" => T<string> * !?ConversionOptions?options ^-> T<Dom.Node>
+
+                "asciimath2chtmlPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<Dom.Node>>
+
+                "asciimath2svg" => T<string> * !?ConversionOptions?options ^-> T<Dom.Node>
+
+                "asciimath2svgPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<Dom.Node>>
+
+                "asciimath2mml" => T<string> * !?ConversionOptions?options ^-> T<string>
+
+                "asciimath2mmlPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<string>>
 
                 "asciimathReset" => T<unit> ^-> T<unit>
 
-                "asciimath2chtml" => T<string> * !?T<obj> ^-> T<obj>
+                // MathML -> CHTML / SVG / MathML
+                "mathml2chtml" => T<string> * !?ConversionOptions?options ^-> T<Dom.Node>
 
-                "asciimath2chtmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
+                "mathml2chtmlPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<Dom.Node>>
 
-                // MathML
-                "mathml2mml" => T<string> * !?T<obj> ^-> T<obj>
+                "mathml2svg" => T<string> * !?ConversionOptions?options ^-> T<Dom.Node>
 
-                "mathml2mmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
+                "mathml2svgPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<Dom.Node>>
+
+                "mathml2mml" => T<string> * !?ConversionOptions?options ^-> T<string>
+
+                "mathml2mmlPromise" => T<string> * !?ConversionOptions?options ^-> T<Promise<string>>
 
                 "mathmlReset" => T<unit> ^-> T<unit>
-
-                "mathml2chtml" => T<string> * !?T<obj> ^-> T<obj>
-
-                "mathml2chtmlPromise" => T<string> * !?T<obj> ^-> T<Promise<obj>>
             ]
         |> ignore
 
     let Assembly =
         Assembly [ 
             Namespace "WebSharper.MathJax.Resources" [
-                Resource "Js" "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"  
+                Resource "Js" "https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js"  
                 |> RequiresExternal [T<ConfigResource>]              
                 |> AssemblyWide
             ]            
@@ -729,6 +1108,21 @@ module Definition =
             Namespace "WebSharper.MathJax" [ 
                 MathJaxClass
                 MathJaxConfig
+                MathJaxStartupClass
+                MathJaxStartupConfig
+                MathJaxLoaderClass
+                MathJaxLoaderConfig
+                PackageClass
+                PackageConfig
+                MenuClass
+                MenuSettings
+                MenuOptions
+                DocumentOptions
+                TeXInputConfig
+                MathMLInputConfig
+                AsciiMathInputConfig
+                LinebreakConfig
+                ConversionOptions
                 HandlerListClass
                 MathDocumentClass
                 MathListClass
@@ -738,17 +1132,17 @@ module Definition =
                 PrioritizedListClass
                 RenderListClass
                 MathItemClass
+                InputJaxListClass
                 DOMAdaptorClass
                 InputJaxClass
                 FunctionListClass
                 OutputJaxClass
-                MathJaxStartupConfig
                 HandlerClass
-                MathJaxLoaderConfig
                 Metrics
                 Location
                 PackageError
                 ChtmlConfig
+                SvgConfig
             ] 
         ]
 
